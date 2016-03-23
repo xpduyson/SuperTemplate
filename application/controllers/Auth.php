@@ -114,7 +114,6 @@ class Auth extends MY_Controller {
 
 	/**
 	 * Activation
-	 */
 	public function activate($id = NULL, $code = NULL)
 	{
 		if ( empty($id) )
@@ -145,10 +144,10 @@ class Auth extends MY_Controller {
 			redirect('auth/forgot_password');
 		}
 	}
+	 */
 
 	/**
 	 * Forgot Password page
-	 */
 	public function forgot_password()
 	{
 		$form = $this->form_builder->create_form();
@@ -187,10 +186,10 @@ class Auth extends MY_Controller {
 		$this->mViewData['form'] = $form;
 		$this->render('auth/forgot_password');
 	}
+	 */
 
 	/**
 	 * Reset Password page
-	 */
 	public function reset_password($code = NULL)
 	{
 		if (!$code)
@@ -249,4 +248,6 @@ class Auth extends MY_Controller {
 			redirect('auth/forgot_password', 'refresh');
 		}
 	}
+	 */
+
 }
