@@ -945,17 +945,6 @@ class Ion_auth_model extends CI_Model
 		    			  ->order_by('id', 'desc')
 		                  ->get($this->tables['users']);
 
-		if($this->is_time_locked_out($identity))
-		{
-			// Hash something anyway, just to take up time
-			$this->hash_password($password);
-
-			$this->trigger_events('post_login_unsuccessful');
-			$this->set_error('login_timeout');
-
-			return FALSE;
-		}
-
 		if ($query->num_rows() === 1)
 		{
 			$user = $query->row();
@@ -974,8 +963,6 @@ class Ion_auth_model extends CI_Model
 
 				$this->set_session($user);
 
-				$this->clear_login_attempts($identity);
-
 				if ($remember && $this->config->item('remember_users', 'ion_auth'))
 				{
 					$this->remember_user($user->id);
@@ -991,42 +978,10 @@ class Ion_auth_model extends CI_Model
 		// Hash something anyway, just to take up time
 		$this->hash_password($password);
 
-		$this->increase_login_attempts($identity);
-
 		$this->trigger_events('post_login_unsuccessful');
 		$this->set_error('login_unsuccessful');
 
 		return FALSE;
-	}
-
-	/**
-	 * is_max_login_attempts_exceeded
-	 * Based on code from Tank Auth, by Ilya Konyukhov (https://github.com/ilkon/Tank-Auth)
-	 *
-	 * @param string $identity
-	 * @return boolean
-	 **/
-	public function is_max_login_attempts_exceeded($identity) {
-		if ($this->config->item('track_login_attempts', 'ion_auth')) {
-			$max_attempts = $this->config->item('maximum_login_attempts', 'ion_auth');
-			if ($max_attempts > 0) {
-				$attempts = $this->get_attempts_num($identity);
-				return $attempts >= $max_attempts;
-			}
-		}
-		return FALSE;
-	}
-
-
-	/**
-	 * Get a boolean to determine if an account should be locked out due to
-	 * exceeded login attempts within a given period
-	 *
-	 * @return	boolean
-	 */
-	public function is_time_locked_out($identity) {
-
-		return $this->is_max_login_attempts_exceeded($identity) && $this->get_last_attempt_time($identity) > time() - $this->config->item('lockout_time', 'ion_auth');
 	}
 
 
