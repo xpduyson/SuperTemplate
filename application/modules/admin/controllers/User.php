@@ -59,7 +59,7 @@ class User extends Admin_Controller {
 				'users'				=> 'users',
 				'groups'			=> 'groups',
 				'users_groups'		=> 'users_groups',
-				'login_attempts'	=> 'login_attempts',
+				
 			);
 
 			// proceed to create user
@@ -116,7 +116,7 @@ class User extends Admin_Controller {
 				'users'				=> 'users',
 				'groups'			=> 'groups',
 				'users_groups'		=> 'users_groups',
-				'login_attempts'	=> 'login_attempts',
+				
 			);
 
 			// proceed to change user password
