@@ -28,7 +28,7 @@
 		</section>
 		<section class="content">
 			<?php $this->load->view($inner_view); ?>
-			<?php $this->load->view('_partials/back_btn'); ?>
+			<?php /*$this->load->view('_partials/back_btn'); */?>
 		</section>
 	</div>
 
