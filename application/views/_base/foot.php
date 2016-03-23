@@ -6,8 +6,5 @@
 			echo "<script src='$url'></script>".PHP_EOL;
 		}
 	?>
-
-	<?php // Google Analytics ?>
-	<?php $this->load->view('_partials/ga') ?>
 </body>
 </html>
