@@ -64,16 +64,7 @@ $config['site'] = array(
 			'url'		=> '',
 			'icon'		=> 'fa fa-home',
 		),
-		'user' => array(
-			'name'		=> 'Users',
-			'url'		=> 'user',
-			'icon'		=> 'fa fa-users',
-			'children'  => array(
-				'List'			=> 'user',
-				'Create'		=> 'user/create',
-				'User Groups'	=> 'user/group',
-			)
-		),
+
 		'demo' => array(
 			'name'		=> 'Demo',
 			'url'		=> 'demo',
