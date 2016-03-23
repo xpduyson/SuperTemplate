@@ -22,7 +22,7 @@ class Panel extends Admin_Controller {
 	{
 		$crud = $this->generate_crud('admin_users');
 		$crud->columns('groups', 'username', 'first_name', 'last_name', 'active');
-		$this->unset_crud_fields('ip_address', 'last_login');
+		//$this->unset_crud_fields('ip_address', 'last_login');
 
 		// cannot change Admin User groups once created
 		if ($crud->getState()=='list')
