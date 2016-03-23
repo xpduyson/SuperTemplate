@@ -11,10 +11,6 @@
  * 	- $config['site_title'] = "Admin Panel"; (default: 'Example.com')
  * 	- $config['default_group'] = 'admin'; (default: 'members')
  * 	- $config['identity'] = 'username'; (default: 'email')
- * 	- $config['email_templates'] = 'email/auth/'; (default: 'auth/email/')
- * 	- $config['email_activate']	= 'activate.php'; (default: 'activate.tpl.php')
- * 	- $config['email_forgot_password'] = 'forgot_password.php'; (default: 'forgot_password.tpl.php')
- * 	- $config['email_forgot_password_complete']	= 'new_password.php'; (default: new_password.tpl.php)
  */
 
 /*
@@ -105,52 +101,6 @@ $config['forgot_password_expiration'] = 0;                   // The number of mi
  */
 $config['remember_cookie_name'] = 'remember_code';
 $config['identity_cookie_name'] = 'identity';
-
-/*
- | -------------------------------------------------------------------------
- | Email options.
- | -------------------------------------------------------------------------
- | email_config:
- | 	  'file' = Use the default CI config or use from a config file
- | 	  array  = Manually set your email config settings
- */
-$config['use_ci_email'] = FALSE; // Send Email using the builtin CI email class, if false it will return the code and the identity
-$config['email_config'] = array(
-	'mailtype' => 'html',
-);
-
-/*
- | -------------------------------------------------------------------------
- | Email templates.
- | -------------------------------------------------------------------------
- | Folder where email templates are stored.
- | Default: auth/
- */
-$config['email_templates'] = 'email/auth/';
-
-/*
- | -------------------------------------------------------------------------
- | Activate Account Email Template
- | -------------------------------------------------------------------------
- | Default: activate.tpl.php
- */
-$config['email_activate'] = 'activate.php';
-
-/*
- | -------------------------------------------------------------------------
- | Forgot Password Email Template
- | -------------------------------------------------------------------------
- | Default: forgot_password.tpl.php
- */
-$config['email_forgot_password'] = 'forgot_password.php';
-
-/*
- | -------------------------------------------------------------------------
- | Forgot Password Complete Email Template
- | -------------------------------------------------------------------------
- | Default: new_password.tpl.php
- */
-$config['email_forgot_password_complete'] = 'new_password.php';
 
 /*
  | -------------------------------------------------------------------------

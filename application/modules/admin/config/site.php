@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['site'] = array(
 
 	// Site name
-	'name' => 'Admin Panel',
+	'name' => 'CMR System',
 
 	// Default page title
 	// (set empty then MY_Controller will automatically generate one based on controller / action)
@@ -23,8 +23,8 @@ $config['site'] = array(
 
 	// Default meta data (name => content)
 	'meta'	=> array(
-		'author'		=> 'Michael Chan (https://github.com/waifung0207)',
-		'description'	=> 'CI Bootstrap 3 Admin Panel'
+		'author'		=> 'xpduyson',
+		'description'	=> 'Course Monitor Report'
 	),
 
 	// Default scripts to embed at page head / end
