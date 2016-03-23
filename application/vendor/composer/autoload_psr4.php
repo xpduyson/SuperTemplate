@@ -8,6 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'Swagger\\' => array($vendorDir . '/zircote/swagger-php/src'),
-    'League\\Csv\\' => array($vendorDir . '/league/csv/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
 );
