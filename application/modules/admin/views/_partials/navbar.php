@@ -16,6 +16,7 @@
                     <ul class="dropdown-menu">
                         <li class="user-header">
                             <p><?php echo $user->first_name; ?></p>
+                            nhập thêm thông tin vào đây
                         </li>
                         <li class="user-footer">
                             <div class="pull-left">
