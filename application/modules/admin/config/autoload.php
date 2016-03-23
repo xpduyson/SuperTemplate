@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
-| AUTO-LOADER (module-specific)
+| AUTO-LOADER (module-specific) 
 | -------------------------------------------------------------------
 | For detailed usage, please check the comments from original file:
 | application/config/autoload.php
