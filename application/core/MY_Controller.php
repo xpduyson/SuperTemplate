@@ -255,4 +255,3 @@ class MY_Controller extends MX_Controller {
 
 // include base controllers
 require APPPATH."core/controllers/Admin_Controller.php";
-require APPPATH."core/controllers/Api_Controller.php";
