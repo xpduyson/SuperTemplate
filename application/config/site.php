@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['site'] = array(
 
 	// Site name
-	'name' => 'CI Bootstrap 3',
+	'name' => 'CMR System',
 
 	// Default page title
 	// (set empty then MY_Controller will automatically generate one based on controller / action)
@@ -23,82 +23,113 @@ $config['site'] = array(
 
 	// Default meta data (name => content)
 	'meta'	=> array(
-		'author'		=> 'Michael Chan (https://github.com/waifung0207)',
-		'description'	=> 'CI Bootstrap 3'
+		'author'		=> 'xpduyson',
+		'description'	=> 'Course Monitor Report'
 	),
 
 	// Default scripts to embed at page head / end
 	'scripts' => array(
 		'head'	=> array(
+			'assets/dist/adminlte.min.js',
+			'assets/dist/admin.min.js'
 		),
 		'foot'	=> array(
-			'assets/dist/app.min.js'
 		),
 	),
 
 	// Default stylesheets to embed at page head
 	'stylesheets' => array(
 		'screen' => array(
-			'assets/dist/app.min.css'
+			'assets/dist/adminlte.min.css',
+			'assets/dist/admin.min.css'
 		)
 	),
 
 	// Multilingual settings (set empty array to disable this)
-	'multilingual' => array(
-		'default'		=> 'en',			// to decide which of the "available" languages should be used
-		'available'		=> array(			// availabe languages with names to display on site (e.g. on menu)
-			'en' => array(					// abbr. value to be used on URL, or linked with database fields
-				'label'	=> 'English',		// label to be displayed on language switcher
-				'value'	=> 'english',		// to match with CodeIgniter folders inside application/language/
-			)
-		),
-		'autoload'		=> array('general'),	// language files to autoload
+	'multilingual' => array(),
+
+	// AdminLTE settings
+	'adminlte' => array(
+		'webmaster'	=> array('skin' => 'skin-red'),
+		'admin'		=> array('skin' => 'skin-purple'),
+		'manager'	=> array('skin' => 'skin-black'),
+		'staff'		=> array('skin' => 'skin-blue')
 	),
 
-	// Google Analytics User ID (UA-XXXXXXXX-X)
-	'ga_id' => '',
-	
-	// Menu items
-	// (or directly update view file: applications/views/_partials/navbar.php)
+	// Menu items which support icon fonts, e.g. Font Awesome
+	// (or directly update view file: /application/modules/admin/views/_partials/sidemenu.php)
 	'menu' => array(
 		'home' => array(
 			'name'		=> 'Home',
 			'url'		=> '',
+			'icon'		=> 'fa fa-home',
 		),
-		// Demo to add sections with subpages
+
 		'demo' => array(
 			'name'		=> 'Demo',
 			'url'		=> 'demo',
+			'icon'		=> 'ion ion-load-b',	// use Ionicons (instead of FontAwesome)
 			'children'  => array(
-				'Form (Basic)'			=> 'demo/form_basic',
-				'Form (Bootstrap 3)'	=> 'demo/form_bs3',
-				'Carousel'				=> 'demo/carousel',
-				'Blog Posts'			=> 'demo/blog_posts',
-				'Pagination'			=> 'demo/pagination',
-				'Item 1'				=> 'demo/item/1',
-				'Item 2'				=> 'demo/item/2',
-				'Item 3'				=> 'demo/item/3',
-				'Custom 404'			=> 'demo/non_existed',
+				'AdminLTE'			=> 'demo/adminlte',
+				'Blog Posts'		=> 'demo/blog_post',
+				'Blog Categories'	=> 'demo/blog_category',
+				'Blog Tags'			=> 'demo/blog_tag',
+				'Cover Photos'		=> 'demo/cover_photo',
+				'Pagination'		=> 'demo/pagination',
+				'Sortable'			=> 'demo/sortable',
+				'Item 1'			=> 'demo/item/1',
+				'Item 2'			=> 'demo/item/2',
+				'Item 3'			=> 'demo/item/3',
 			)
 		),
-		// end of demo
-		'sign_up' => array(
-			'name'		=> 'Sign Up',
-			'url'		=> 'auth/sign_up',
+		'panel' => array(
+			'name'		=> 'Admin Panel',
+			'url'		=> 'panel',
+			'icon'		=> 'fa fa-cog',
+			'children'  => array(
+				'Admin Users'			=> 'panel/admin_user',
+				'Create Admin User'		=> 'panel/admin_user_create',
+				'Admin User Groups'		=> 'panel/admin_user_group',
+			)
 		),
-		'login' => array(
-			'name'		=> 'Login',
-			'url'		=> 'auth/login',
-		),
+		'logout' => array(
+			'name'		=> 'Sign Out',
+			'url'		=> 'panel/logout',
+			'icon'		=> 'fa fa-sign-out',
+		)
 	),
 
 	// default page when redirect non-logged-in user
-	'login_url' => 'auth/login',
+	'login_url' => 'login',
 
 	// restricted pages to specific groups of users, which will affect sidemenu item as well
-	// pages out of this array will have no restriction
+	// pages out of this array will have no restriction (except required admin user login)
 	'page_auth' => array(
-		'account'		=> array('members')
+		'user/create'				=> array('webmaster', 'admin', 'manager'),
+		'user/group'				=> array('webmaster', 'admin', 'manager'),
+		'panel'						=> array('webmaster'),
+		'panel/admin_user'			=> array('webmaster'),
+		'panel/admin_user_create'	=> array('webmaster'),
+		'panel/admin_user_group'	=> array('webmaster'),
+	),
+
+	// Useful links to display at bottom of sidemenu (e.g. to pages outside Admin Panel)
+	'useful_links' => array(
+		array(
+			'auth'		=> array('webmaster', 'admin', 'manager', 'staff'),
+			'name'		=> 'Frontend Website',
+			'url'		=> '',
+			'target'	=> '_blank',
+			'color'		=> 'text-aqua'
+		),
+		
+		array(
+			'auth'		=> array('webmaster', 'admin', 'manager', 'staff'),
+			'name'		=> 'Github Repo',
+			'url'		=> CI_BOOTSTRAP_REPO,
+			'target'	=> '_blank',
+			'color'		=> 'text-green'
+		),
 	),
 
 	// For debug purpose (available only when ENVIRONMENT = 'development')

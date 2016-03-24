@@ -5,7 +5,7 @@
  */
 class Admin_Controller extends MY_Controller {
 
-	protected $mLoginUrl = 'admin/login';
+	protected $mLoginUrl = 'login';
 	protected $mUsefulLinks = array();
 
 	// Grocery CRUD or Image CRUD

@@ -8,8 +8,22 @@
 
 $config = array(
 
-	// Sign Up
-	'auth/sign_up' => array(
+	// Admin User Login
+	'login/index' => array(
+		array(
+			'field'		=> 'username',
+			'label'		=> 'Username',
+			'rules'		=> 'required',
+		),
+		array(
+			'field'		=> 'password',
+			'label'		=> 'Password',
+			'rules'		=> 'required',
+		),
+	),
+
+	// Create User
+	'user/create' => array(
 		array(
 			'field'		=> 'first_name',
 			'label'		=> 'First Name',
@@ -21,6 +35,11 @@ $config = array(
 			'rules'		=> 'required',
 		),
 		array(
+			'field'		=> 'username',
+			'label'		=> 'Username',
+			'rules'		=> 'is_unique[users.username]',				// use email as username if empty
+		),
+		array(
 			'field'		=> 'email',
 			'label'		=> 'Email',
 			'rules'		=> 'required|valid_email|is_unique[users.email]',
@@ -28,7 +47,7 @@ $config = array(
 		array(
 			'field'		=> 'password',
 			'label'		=> 'Password',
-			'rules'		=> 'required|min_length[8]',
+			'rules'		=> 'required',
 		),
 		array(
 			'field'		=> 'retype_password',
@@ -37,35 +56,42 @@ $config = array(
 		),
 	),
 
-	// Login
-	'auth/login' => array(
+	// Reset User Password
+	'user/reset_password' => array(
+		array(
+			'field'		=> 'new_password',
+			'label'		=> 'New Password',
+			'rules'		=> 'required',
+		),
+		array(
+			'field'		=> 'retype_password',
+			'label'		=> 'Retype Password',
+			'rules'		=> 'required|matches[new_password]',
+		),
+	),
+
+	// Create Admin User
+	'panel/admin_user_create' => array(
+		array(
+			'field'		=> 'username',
+			'label'		=> 'Username',
+			'rules'		=> 'required|is_unique[users.username]',
+		),
+		array(
+			'field'		=> 'first_name',
+			'label'		=> 'First Name',
+			'rules'		=> 'required',
+		),
+		/* Admin User can have no email
 		array(
 			'field'		=> 'email',
 			'label'		=> 'Email',
-			'rules'		=> 'required|valid_email',
-		),
+			'rules'		=> 'valid_email|is_unique[users.email]',
+		),*/
 		array(
 			'field'		=> 'password',
 			'label'		=> 'Password',
 			'rules'		=> 'required',
-		),
-	),
-
-	// Forgot Password
-	'auth/forgot_password' => array(
-		array(
-			'field'		=> 'email',
-			'label'		=> 'Email',
-			'rules'		=> 'required|valid_email',
-		),
-	),
-
-	// Reset Password
-	'auth/reset_password' => array(
-		array(
-			'field'		=> 'password',
-			'label'		=> 'Password',
-			'rules'		=> 'required|min_length[8]',
 		),
 		array(
 			'field'		=> 'retype_password',
@@ -74,49 +100,45 @@ $config = array(
 		),
 	),
 
-	// Demo only
-	'demo/form_basic' => array(
+	// Reset Admin User Password
+	'panel/admin_user_reset_password' => array(
 		array(
-			'field'		=> 'name',
-			'label'		=> 'Name',
+			'field'		=> 'new_password',
+			'label'		=> 'New Password',
 			'rules'		=> 'required',
 		),
 		array(
-			'field'		=> 'email',
-			'label'		=> 'Email',
-			'rules'		=> 'required|valid_email',
+			'field'		=> 'retype_password',
+			'label'		=> 'Retype Password',
+			'rules'		=> 'required|matches[new_password]',
 		),
+	),
+
+	// Admin User Update Info
+	'panel/account_update_info' => array(
 		array(
-			'field'		=> 'subject',
-			'label'		=> 'Subject',
+			'field'		=> 'username',
+			'label'		=> 'Username',
 			'rules'		=> 'required',
 		),
 		array(
-			'field'		=> 'message',
-			'label'		=> 'Message',
+			'field'		=> 'password',
+			'label'		=> 'Password',
 			'rules'		=> 'required',
 		),
 	),
-	'demo/form_bs3' => array(
+
+	// Admin User Change Password
+	'panel/account_change_password' => array(
 		array(
-			'field'		=> 'name',
-			'label'		=> 'Name',
+			'field'		=> 'new_password',
+			'label'		=> 'New Password',
 			'rules'		=> 'required',
 		),
 		array(
-			'field'		=> 'email',
-			'label'		=> 'Email',
-			'rules'		=> 'required|valid_email',
-		),
-		array(
-			'field'		=> 'subject',
-			'label'		=> 'Subject',
-			'rules'		=> 'required',
-		),
-		array(
-			'field'		=> 'message',
-			'label'		=> 'Message',
-			'rules'		=> 'required',
+			'field'		=> 'retype_password',
+			'label'		=> 'Retype Password',
+			'rules'		=> 'required|matches[new_password]',
 		),
 	),
 
