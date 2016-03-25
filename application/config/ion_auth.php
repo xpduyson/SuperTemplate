@@ -19,9 +19,9 @@
 | -------------------------------------------------------------------------
 | Database table names.
 */
-$config['tables']['users']           = 'admin_users';
-$config['tables']['groups']          = 'admin_groups';
-$config['tables']['users_groups']    = 'admin_users_groups';
+$config['tables']['users']           = 'users';
+$config['tables']['groups']          = 'groups';
+$config['tables']['users_groups']    = 'users_groups';
 
 /*
  | Users table column and Group table column you want to join WITH.

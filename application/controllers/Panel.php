@@ -20,14 +20,14 @@ class Panel extends Admin_Controller {
 	// Admin Users CRUD
 	public function admin_user()
 	{
-		$crud = $this->generate_crud('admin_users');
+		$crud = $this->generate_crud('users');
 		$crud->columns('groups', 'username', 'first_name', 'last_name', 'active');
 		//$this->unset_crud_fields('ip_address', 'last_login');
 
 		// cannot change Admin User groups once created
 		if ($crud->getState()=='list')
 		{
-			$crud->set_relation_n_n('groups', 'admin_users_groups', 'admin_groups', 'user_id', 'group_id', 'name');
+			$crud->set_relation_n_n('groups', 'users_groups', 'groups', 'user_id', 'group_id', 'name');
 		}
 
 		// only webmaster can reset Admin User password
@@ -47,6 +47,7 @@ class Panel extends Admin_Controller {
 	// Create Admin User
 	public function admin_user_create()
 	{
+		//TODO: sửa id phải nhập thủ công chứ ko auto inc 
 		// (optional) only top-level admin user groups can create Admin User
 		//$this->verify_auth(array('webmaster'));
 
@@ -93,7 +94,7 @@ class Panel extends Admin_Controller {
 	// Admin User Groups CRUD
 	public function admin_user_group()
 	{
-		$crud = $this->generate_crud('admin_groups');
+		$crud = $this->generate_crud('groups');
 		$this->mTitle.= 'Admin User Groups';
 		$this->render_crud();
 	}
