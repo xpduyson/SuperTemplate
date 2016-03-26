@@ -71,6 +71,11 @@ $config['site'] = array(
 			'url'		=> 'faculty',
 			'icon'		=> 'glyphicon glyphicon-list-alt',
 		),
+		'course' => array(
+			'name'		=> 'Course',
+			'url'		=> 'course',
+			'icon'		=> 'glyphicon glyphicon-book',
+		),
 
 		'demo' => array(
 			'name'		=> 'Demo',
