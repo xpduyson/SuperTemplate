@@ -82,7 +82,7 @@ class Course extends Admin_Controller
         }
 
 
-        return ' <input type="number" max="'.$max.'"  value="'.$value.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
+        return ' <input type="number" max="'.$max.'"  value="'.$max.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
     }
 
 }
