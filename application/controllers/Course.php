@@ -25,13 +25,64 @@ class Course extends Admin_Controller
      //   $crud->set_rules('coutitle','Course-Details','required');
      //   $crud->set_rules('coutime','Time','required');
      //   $crud->set_rules('status','Status','required');
+        $crud->callback_before_insert(array($this,'setstatus'));
+        if($crud->getState()=='edit'){
+            $pk = $crud->getStateInfo()->primary_key;
 
+        }
+        $crud->callback_edit_field('coutime',array($this,'edit_field_callback_1'));
 
-
+        $crud->callback_column('coutime',array($this,'valueToEuro'));
+        $crud->callback_before_insert(array($this,'setstatus'));
         $crud->fields('couid','faculty','coutitle','coutime');
-        $crud->fields('couid','faculty','coutitle','coutime','status');
+        $crud->edit_fields('couid','faculty','coutitle','coutime','status');
         $crud->set_relation('faculty','faculties','facdetails');
+        $crud->display_as('coutime','Time(Month)');
+       // $crud->set_rules('faculty','faculties','edit_field_callback_1');
+       // $crud->set_rules('coutime','Time','max=12');
         $this->mTitle.= 'Course';
         $this->render_crud($crud);
     }
+    public function gettime(){
+
+
+    }
+    function valueToEuro($value, $row)
+    {
+        return $value.' Month';
+    }
+    function setstatus($post_array)
+    {
+        if(empty($post_array['status']))
+        {
+            $post_array['status'] = '1';
+        }
+        return $post_array;
+    }
+    function edit_field_callback_1($value)
+    {
+        $time=0;
+        $id = $this->uri->segment(4);
+        $faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
+        $result = $this->db->where("faculty",$faculty)->get('course');
+        if($result->num_rows() > 0)
+        {
+            foreach($result->result() as $row)
+            {
+                if($row->status==1){
+                    $time += $row->coutime;
+                }
+                //$time += $row->coutime;
+
+            }
+            echo $time;
+            //$time-=$value;
+            $a=$time-$value;
+            $max=12-$a;
+        }
+
+
+        return ' <input type="number" max="'.$max.'"  value="'.$value.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
+    }
+
 }
