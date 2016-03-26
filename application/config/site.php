@@ -50,10 +50,12 @@ $config['site'] = array(
 
 	// AdminLTE settings
 	'adminlte' => array(
-		'webmaster'	=> array('skin' => 'skin-red'),
-		'admin'		=> array('skin' => 'skin-purple'),
-		'manager'	=> array('skin' => 'skin-black'),
-		'staff'		=> array('skin' => 'skin-blue')
+		'webmaster'	=> array('skin' => 'skin-black'),
+		'PVC'		=> array('skin' => 'skin-purple'),
+		'DLT'		=> array('skin' => 'skin-red'),
+		'CL'		=> array('skin' => 'skin-blue'),
+		'CM'		=> array('skin' => 'skin-green'),
+		'guest'		=> array('skin' => 'skin-blue-light')
 	),
 
 	// Menu items which support icon fonts, e.g. Font Awesome
@@ -110,8 +112,6 @@ $config['site'] = array(
 	// restricted pages to specific groups of users, which will affect sidemenu item as well
 	// pages out of this array will have no restriction (except required admin user login)
 	'page_auth' => array(
-		'user/create'				=> array('webmaster', 'admin', 'manager'),
-		'user/group'				=> array('webmaster', 'admin', 'manager'),
 		'panel'						=> array('webmaster'),
 		'panel/admin_user'			=> array('webmaster'),
 		'panel/admin_user_create'	=> array('webmaster'),
@@ -121,7 +121,7 @@ $config['site'] = array(
 	// Useful links to display at bottom of sidemenu (e.g. to pages outside Admin Panel)
 	'useful_links' => array(
 		array(
-			'auth'		=> array('webmaster', 'admin', 'manager', 'staff'),
+			'auth'		=> array('webmaster', 'PVC', 'DLT', 'CL', 'CM', 'guest'),
 			'name'		=> 'Frontend Website',
 			'url'		=> '',
 			'target'	=> '_blank',
@@ -129,7 +129,7 @@ $config['site'] = array(
 		),
 		
 		array(
-			'auth'		=> array('webmaster', 'admin', 'manager', 'staff'),
+			'auth'		=> array('webmaster', 'PVC', 'DLT', 'CL', 'CM', 'guest'),
 			'name'		=> 'Github Repo',
 			'url'		=> CI_BOOTSTRAP_REPO,
 			'target'	=> '_blank',
