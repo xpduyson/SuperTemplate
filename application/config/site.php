@@ -66,6 +66,11 @@ $config['site'] = array(
 			'url'		=> '',
 			'icon'		=> 'fa fa-home',
 		),
+		'faculties' => array(
+			'name'		=> 'Faculty',
+			'url'		=> 'faculty',
+			'icon'		=> 'glyphicon glyphicon-list-alt',
+		),
 
 		'demo' => array(
 			'name'		=> 'Demo',
