@@ -77,6 +77,15 @@ $config['site'] = array(
 			'icon'		=> 'glyphicon glyphicon-book',
 		),
 
+		'cmr' => array(
+			'name' => 'CMR',
+			'url' => 'cmr',
+			'children' => array(
+				'View CMR' => 'cmr',
+				'Add CMR' => 'cmr/Add',
+			)
+		),
+
 		'demo' => array(
 			'name'		=> 'Demo',
 			'url'		=> 'demo',
@@ -121,6 +130,8 @@ $config['site'] = array(
 		'panel/admin_user'			=> array('webmaster'),
 		'panel/admin_user_create'	=> array('webmaster'),
 		'panel/admin_user_group'	=> array('webmaster'),
+		'cmr/Add'					=> array('CL'),
+
 	),
 
 	// Useful links to display at bottom of sidemenu (e.g. to pages outside Admin Panel)

@@ -45,7 +45,7 @@ class Admin_Controller extends MY_Controller {
 		$this->load->library('Grocery_CRUD');
 		$crud = new grocery_CRUD();
 		$crud->set_table($table);
-
+			
 		// auto-generate subject
 		if ( empty($subject) )
 		{
