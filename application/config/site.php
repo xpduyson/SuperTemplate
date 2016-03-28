@@ -79,7 +79,7 @@ $config['site'] = array(
 
 		'cmr' => array(
 			'name' => 'CMR',
-			'url' => 'cmr',
+			'url' => 'CMR',
 			'children' => array(
 				'View CMR' => 'cmr',
 				'Add CMR' => 'cmr/Add',
