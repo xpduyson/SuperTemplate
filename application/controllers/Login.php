@@ -12,10 +12,12 @@ class Login extends MY_Controller {
 	{
 		$this->load->library('form_builder');
 		$form = $this->form_builder->create_form();
+		$this->load->model('Cmr_model');
 
 		if ($form->validate())
 		{
 			// passed validation
+
 			$identity = $this->input->post('username');
 			$password = $this->input->post('password');
 			$remember = ($this->input->post('remember')=='on');
@@ -24,6 +26,8 @@ class Login extends MY_Controller {
 			{
 				// login succeed
 				$messages = $this->ion_auth->messages();
+				$data = $this->Cmr_model->getNeededCommentCMR($this->ion_auth->user()->row()->id);
+				$this->session->set_flashdata('cmrNotComment',$data);
 				$this->system_message->set_success($messages);
 				redirect('home');
 			}
