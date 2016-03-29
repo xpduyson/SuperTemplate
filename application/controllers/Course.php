@@ -20,50 +20,95 @@ class Course extends Admin_Controller
         // $crud->set_relation('category_id', 'demo_blog_categories', 'title');
         // $crud->set_relation_n_n('tags', 'demo_blog_posts_tags', 'demo_blog_tags', 'post_id', 'tag_id', 'title');
 
-     //   $crud->set_rules('couid','Course-ID','required');
-     //   $crud->set_rules('faculty','Faculties-Name','required');
-     //   $crud->set_rules('coutitle','Course-Details','required');
-     //   $crud->set_rules('coutime','Time','required');
-     //   $crud->set_rules('status','Status','required');
-        $crud->callback_before_insert(array($this,'setstatus'));
-        if($crud->getState()=='edit'){
-            $pk = $crud->getStateInfo()->primary_key;
+        $crud->set_rules('couid','Course-ID','required');
+        $crud->set_rules('faculty','Faculties-Name','required');
+        $crud->set_rules('coutitle','Course-Details','required');
+        $crud->set_rules('coutime', 'coutime','required');
+        //$crud->set_rules('status','Status','required');
+        //set status when insert active
 
-        }
+
         $crud->callback_edit_field('coutime',array($this,'edit_field_callback_1'));
-
+        $crud->callback_add_field('status',array($this,'edit_field_callback_2'));
         $crud->callback_column('coutime',array($this,'valueToEuro'));
-        $crud->callback_before_insert(array($this,'setstatus'));
-        $crud->fields('couid','faculty','coutitle','coutime');
+
+
+        $crud->fields('couid','faculty','coutitle','status');
         $crud->edit_fields('couid','faculty','coutitle','coutime','status');
-        $crud->set_relation('faculty','faculties','facdetails');
+        $crud->set_relation('faculty','faculties','facdetails','status=1');
+
         $crud->display_as('coutime','Time(Month)');
-       // $crud->set_rules('faculty','faculties','edit_field_callback_1');
-       // $crud->set_rules('coutime','Time','max=12');
+      //  $crud->callback_before_insert(array($this,'encrypt_password_callback'));
+        $crud->callback_before_update(array($this,'beforeUpdate'));
+
+        $crud->callback_before_insert(array($this,'beforeInsert'));
+       //    $crud->callback_after_insert(array($this, 'after_insert'));
         $this->mTitle.= 'Course';
         $this->render_crud($crud);
     }
-    public function gettime(){
 
-
-    }
     function valueToEuro($value, $row)
     {
         return $value.' Month';
     }
-    function setstatus($post_array)
+    function encrypt_password_callback($post_array) {
+
+    //$post_array['status'] = $this->encrypt->encode($post_array['password'], $key);
+
+    return $post_array;
+}
+    function beforeInsert($post_array)
     {
-        if(empty($post_array['status']))
-        {
-            $post_array['status'] = '1';
-        }
+        echo 'before update';
+        $post_array['status'] = '0';
+        //echo $post_array['status'];
+
         return $post_array;
+    }
+    function beforeUpdate($post_array)
+    {
+        if($post_array['status']=='1'){
+            $time=0;
+            $id = $this->uri->segment(4);
+            $faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
+            $coutime = $this->db->where("couid",$id)->get('course')->row()->coutime;
+            $result = $this->db->where("faculty",$faculty)->get('course');
+            if($result->num_rows() > 0)
+            {
+                foreach($result->result() as $row)
+                {
+                    if($row->status==1){
+                        $time += $row->coutime;
+                    }
+                }
+                $time-=$coutime;
+            }
+            if($post_array['coutime']+$time>12){
+                $this->load->library('form_validation');
+                $this->form_validation->set_message('beforeUpdate', 'asdasd');
+
+                return FALSE;
+            }
+
+        }
+        return TRUE;
+    }
+    public function get_form_validation(){
+        if($this->form_validation === null)
+        {
+            $this->form_validation = new grocery_CRUD_Form_validation();
+            $ci = &get_instance();
+            $ci->load->library('form_validation');
+            $ci->form_validation = $this->form_validation;
+        }
+        return $this->form_validation;
     }
     function edit_field_callback_1($value)
     {
         $time=0;
         $id = $this->uri->segment(4);
         $faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
+        $status = $this->db->where("couid",$id)->get('course')->row()->status;
         $result = $this->db->where("faculty",$faculty)->get('course');
         if($result->num_rows() > 0)
         {
@@ -72,17 +117,28 @@ class Course extends Admin_Controller
                 if($row->status==1){
                     $time += $row->coutime;
                 }
-                //$time += $row->coutime;
-
             }
-            echo $time;
-            //$time-=$value;
-            $a=$time-$value;
-            $max=12-$a;
+
+            if($status==1){
+                $a=$time-$value;
+                $max=12-$a;
+            }else{
+                $a=$time;
+                $max=12-$a;
+            }
+
+
         }
 
 
-        return ' <input type="number" max="'.$max.'"  value="'.$max.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
+        return ' <input type="number" value="'.$max.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
+    }
+    function edit_field_callback_2($value)
+    {
+
+
+
+        return 'inactive';
     }
 
 }
