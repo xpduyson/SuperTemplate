@@ -97,7 +97,7 @@ class Cmr_model extends CI_Model{
                  ->join('users','users.faculty = faculties.facid','left')
                  ->join('users_groups','users.id = users_groups.user_id','left')
                  ->where('dlt_comment','')
-                 ->where('users.id',$key)
+                 ->where('users.faculty',$key)
                  ->where('users_groups.group_id',3)
                  ->where('cmr_status.cm_checked',1);
         $data = $this->db->get()->result_array();
@@ -111,6 +111,19 @@ class Cmr_model extends CI_Model{
             ->join('course','course.couid = coursestaff.courses')
             ->join('cmr','cmr.courses = course.couid ')
             ->where('cmr.cmrid',$key);
+        return $this->db->get()->row();
+
+    }
+
+    public function getApprovedCM($key){
+        $this->db->select('users.first_name')
+            ->from('coursestaff')
+            ->join('users','users.id = coursestaff.users')
+            ->join('course','course.couid = coursestaff.courses')
+            ->join('cmr','cmr.courses = course.couid ')
+            ->join('users_groups','users.id = users_groups.user_id ')
+            ->where('cmr.cmrid',$key)
+            ->where('users_groups.group_id',5);
         return $this->db->get()->row();
 
     }

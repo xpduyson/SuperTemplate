@@ -11,17 +11,17 @@
                 {
                     ?>if(document.getElementById('txtComment').value == '')
                     document.getElementById('txtComment').disabled = false;
-            document.getElementById('btnApprove').style.visibility = 'hidden';
+                    document.getElementById('btnApprove').style.visibility = 'hidden';
             <?php
             }
             ?>
             if(document.getElementById('txtComment').value != '')
-                document.getElementById('btnSave').disabled = true;
+                        document.getElementById('btnSave').disabled = true;
             <?php
                  if($this->ion_auth->in_group(array('CL')))
                  {
                      ?> document.getElementById('btnSave').style.visibility = 'hidden';
-            document.getElementById('btnApprove').style.visibility = 'hidden';<?php
+                        document.getElementById('btnApprove').style.visibility = 'hidden';<?php
                  }
 
             ?>
@@ -52,8 +52,8 @@
             ?> document.getElementById('btnSave').style.visibility = 'hidden'
             document.getElementById('btnApprove').style.visibility = 'hidden';;<?php
             }
-
             ?>
+
 
         });
     </script>
@@ -90,6 +90,23 @@
                         <input hidden name="userID" value="<?php echo $cmrUser?>">
                     </td>
 
+                </tr>
+                <tr>
+                    <td class="col-md-2"  id="addon3"><strong>Course Manager</strong></td>
+
+                    <td class="col-md-10" id="approveCM"><?php if(!empty($approvedCM))echo $approvedCM->first_name; ?> </td>
+                </tr>
+                <tr id="approveDate">
+                    <td class="col-md-2"  id="addon3"><strong>Approved Date</strong></td>
+
+                    <td class="col-md-10" id="approveCM"><?php if($cmrStatus->cm_checked == 1){
+                            echo $cmrStatus->date_approved;
+                        }
+                        else
+                        {
+                            echo 'Not Approved';
+                        }
+                         ?> </td>
                 </tr>
                 </tbody>
 
@@ -152,12 +169,12 @@
 
         <div class="row">
             <tr>
-                <textarea disabled id="txtComment" rows="5" cols="100" name="comment"><?php echo $cmrStatus->dlt_comment ?></textarea>
+                <textarea required  disabled id="txtComment" rows="5" cols="100" name="comment"><?php echo $cmrStatus->dlt_comment ?></textarea>
             </tr>
         </div>
     <input hidden name="isApprove" value="<?php echo $cmrStatus->cm_checked ?>" id="isApprove"/>
         <div class="row"></div>
-            <button name="submit" id="btnSave" type="submit"  class="btn btn-primary btn-lg pull-right"><span class="glyphicon glyphicon-save"> SAVE </span></button>
+            <button name="submit" id="btnSave" type="submit"  class="btn btn-primary btn-lg pull-right"><span class="glyphicon glyphicon-comment"> COMMENT </span></button>
         </form>
             <button hidden name="approve" id="btnApprove" type="submit"  onclick="document.location.href='cmr/approveCmr'" class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-thumbs-up"> APPROVE </span></button>
             <button name="back" type="submit"  onclick="document.location.href='cmr'" class="btn btn-info btn-lg pull-left"><span class="glyphicon glyphicon-menu-left"> BACK </span></button>

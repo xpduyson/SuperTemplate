@@ -28,15 +28,32 @@ class Cmr extends Admin_Controller{
         $user_id = $user->id;
         $crud = $this->generate_crud('cmr');
         $crud->set_theme('datatables');
-        $crud->columns('cmrid', 'courses', 'academic_year');
-
+        $crud->columns('cmrid', 'courses', 'academic_year','c_m_r_status');
         $crud->display_as('cmrid','ID');
+        $crud->display_as('c_m_r_status','Status');
+        $crud->set_relation('c_m_r_status','cmr_status','id');
+             $crud->callback_column($this->unique_field_name('c_m_r_status'),function($value, $row) {
+                 $this->db->select('dlt_comment,cm_checked')
+                     ->from('cmr_status')
+                     ->where('id',$value);
+                 $stat = $this->db->get()->row();
+                 $result = '';
+                 if($stat->dlt_comment != '')
+                     $result.= 'Commented - ';
+                 else
+                     $result .= 'No comment - ';
+                 if($stat->cm_checked == 0)
+                     $result .= 'Not Approved';
+                 if($stat->cm_checked == 1)
+                     $result .= 'Approved';
 
-
+                 return $result;
+             });
 
 
         if ($this->ion_auth->in_group(array('DLT')))
         {
+
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
                 $this->db->select('coutitle')
                     ->from('course')
@@ -44,12 +61,13 @@ class Cmr extends Admin_Controller{
                 $title = $this->db->get()->row();
                 return $title->coutitle;
             });
+
             $crud->set_relation('courses','course','faculty');
             $crud->where('faculty',$user->faculty);
-
-
             $crud->unset_edit();
             $crud->unset_add();
+
+
         }
 
         if ($this->ion_auth->in_group(array('PVC')))
@@ -159,11 +177,13 @@ class Cmr extends Admin_Controller{
         $details = $this->Cmr_model->getCmrDetails($info->c_m_r__c_w);
         $status = $this->Cmr_model->getCmrStatus($info->c_m_r_status);
         $name = $this->Cmr_model->getName($info->courses);
+        $approvedCM = $this->Cmr_model->getApprovedCM($info->cmrid);
         $this->mTitle = 'CMR Details';
         $this->mViewData['cmrInfo'] = $info;
         $this->mViewData['cmrDetails'] = $details;
         $this->mViewData['cmrUser'] = $name;
         $this->mViewData['cmrStatus'] = $status;
+        $this->mViewData['approvedCM'] = $approvedCM;
         $this->session->set_userdata('cmrStatus2',$status->id);
         $this->session->set_userdata('cmrStatus3',$info->cmrid);
         $this->render('cmr/view_cmr');
@@ -262,32 +282,6 @@ class Cmr extends Admin_Controller{
         }
     }
 
-    public function getTimeLeft(){
-        $cmr = $this->Cmr_model->getNeededCommentCMR();
-        $dateleft = array();
-
-        foreach ($cmr as $item) {
-            $currentTime = time();
-            $cmrtime = strtotime($item['date_approved']);
-            if(($currentTime - $cmrtime) > 1209600 )
-                $dateleft[] = -1;
-            else
-                $dateleft[] = ($currentTime - $cmrtime);
-
-        }
-        return $this->mViewData['dateleft'] = $dateleft;
-    }
-
-    public function idToTitle($value, $row)
-    {
-
-        $this->db->select('coutitle')
-                 ->from('course')
-                 ->where('couid',$row->couid);
-        $title = $this->db->get()->result_array();
-        return $title;
-    }
-
 
 
     function unique_field_name($field_name) {
@@ -309,7 +303,6 @@ class Cmr extends Admin_Controller{
 
         $value = array(
           'cm_checked' => 1,
-            'date_approved' => date('Y-m-d H:i:s')
         );
         $this->db->where('id',$this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
