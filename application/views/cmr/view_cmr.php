@@ -2,14 +2,65 @@
 <html>
 <head>
     <title>ADD CMR</title>
-    <link rel="stylesheet" href="<?php echo base_url("assets/css/bootstrap-theme.min.css");?>">
-    <link rel="stylesheet" href="<?php echo base_url("assets/css/bootstrap.min.css");?>">
-    <script src="<?php echo base_url("assets/js/bootstrap.min.js"); ?>"></script>
-    <script src="<?php echo base_url("assets/js/jquery.min.js"); ?>"></script>
-</head>
+    <script>
 
+        $(document).ready(function(){
+
+            <?php
+                if($this->ion_auth->in_group(array('DLT')))
+                {
+                    ?>if(document.getElementById('txtComment').value == '')
+                    document.getElementById('txtComment').disabled = false;
+                    document.getElementById('btnApprove').style.visibility = 'hidden';
+            <?php
+            }
+            ?>
+            if(document.getElementById('txtComment').value != '')
+                        document.getElementById('btnSave').disabled = true;
+            <?php
+                 if($this->ion_auth->in_group(array('CL')))
+                 {
+                     ?> document.getElementById('btnSave').style.visibility = 'hidden';
+                        document.getElementById('btnApprove').style.visibility = 'hidden';<?php
+                 }
+
+            ?>
+            <?php
+            if($this->ion_auth->in_group(array('CM')))
+            {
+            ?> document.getElementById('btnSave').style.visibility = 'hidden';
+            document.getElementById('btnApprove').style.visibility = 'visible';
+            if(document.getElementById('isApprove').value == 1)
+                document.getElementById('btnApprove').disabled = true;
+            else
+                document.getElementById('btnApprove').disabled = false;
+            <?php
+
+            }
+            ?>
+            <?php
+            if($this->ion_auth->in_group(array('PVC')))
+            {
+            ?> document.getElementById('btnSave').style.visibility = 'hidden'
+            document.getElementById('btnApprove').style.visibility = 'hidden';;<?php
+            }
+
+            ?>
+            <?php
+            if($this->ion_auth->in_group(array('admin')))
+            {
+            ?> document.getElementById('btnSave').style.visibility = 'hidden'
+            document.getElementById('btnApprove').style.visibility = 'hidden';;<?php
+            }
+            ?>
+
+
+        });
+    </script>
 <body>
+
     <div class="container">
+        <form action="<?php echo site_url('cmr/addComment'); ?>" method="post">
         <div class="row">
             <!-- Create general CMR information form-->
             <table class="table">
@@ -17,6 +68,8 @@
                 <tr>
                     <th class="bg-primary" style="text-align: center" colspan="2">COURSE MONITORING REPORT</th>
                 </tr>
+                </thead>
+                <tbody>
                 <tr >
                     <td class="col-md-2" id="addon1"><strong>Academic Year</strong></td>
                     <td class="col-md-10">
@@ -34,11 +87,30 @@
                     <td class="col-md-2"  id="addon3"><strong>Course Leader</strong></td>
                     <td class="col-md-10">
                         <?php echo $user->first_name; ?>
-                        <input hidden name="userID" value="<?php echo $user->id;?>">
+                        <input hidden name="userID" value="<?php echo $cmrUser?>">
                     </td>
 
                 </tr>
-                </thead>
+                <tr>
+                    <td class="col-md-2"  id="addon3"><strong>Course Manager</strong></td>
+
+                    <td class="col-md-10" id="approveCM"><?php if(!empty($approvedCM))echo $approvedCM->first_name; ?> </td>
+                </tr>
+                <tr id="approveDate">
+                    <td class="col-md-2"  id="addon3"><strong>Approved Date</strong></td>
+
+                    <td class="col-md-10" id="approveCM"><?php if($cmrStatus->cm_checked == 1){
+                            echo $cmrStatus->date_approved;
+                        }
+                        else
+                        {
+                            echo 'Not Approved';
+                        }
+                         ?> </td>
+                </tr>
+                </tbody>
+
+
             </table>
         </div>
 
@@ -49,6 +121,8 @@
                 <tr>
                     <th class="bg-primary" colspan="7">Statistical Data</th>
                 </tr>
+                </thead>
+                <tbody>
                 <tr>
                     <th></th>
                     <th>CW1</th>
@@ -85,12 +159,28 @@
                     <td><input disabled value="<?php echo $cmrDetails['cwexam']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[4][standarddeviation]"> </td>
                     <td><input disabled value="<?php echo $cmrDetails['cwoverall']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[5][standarddeviation]"> </td>
                 </tr>
-                </thead>
+
+                </tbody>
             </table>
         </div>
         <div class="row">
-            <button name="back" type="submit" onclick="window.location = 'cmr';" class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-menu-left"> BACK </span></button>
+            <tr><strong>Comment</strong></tr>
         </div>
+
+        <div class="row">
+            <tr>
+                <textarea required  disabled id="txtComment" rows="5" cols="100" name="comment"><?php echo $cmrStatus->dlt_comment ?></textarea>
+            </tr>
+        </div>
+    <input hidden name="isApprove" value="<?php echo $cmrStatus->cm_checked ?>" id="isApprove"/>
+        <div class="row"></div>
+            <button name="submit" id="btnSave" type="submit"  class="btn btn-primary btn-lg pull-right"><span class="glyphicon glyphicon-comment"> COMMENT </span></button>
+        </form>
+            <button hidden name="approve" id="btnApprove" type="submit"  onclick="document.location.href='cmr/approveCmr'" class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-thumbs-up"> APPROVE </span></button>
+            <button name="back" type="submit"  onclick="document.location.href='cmr'" class="btn btn-info btn-lg pull-left"><span class="glyphicon glyphicon-menu-left"> BACK </span></button>
     </div>
+
 </body>
+
 </html>
+
