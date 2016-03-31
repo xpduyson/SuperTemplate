@@ -22,10 +22,16 @@ class Faculty extends Admin_Controller
        $crud->set_rules('facid','Faculties','required');
         $crud->set_rules('facname','Faculties-Name','required');
         $crud->set_rules('facdetails','Faculties-Details','required');
-        $crud->set_rules('startdate','Faculties-Startdate','required');
-        $crud->set_rules('enddate','Faculties-EndDate','required');
+        $crud->set_rules('status','Status','required');
+
+
+        $crud->display_as('facid','Faculty ID');
+        $crud->display_as('facname','Faculty Name');
+        $crud->display_as('facdetails','Faculty Details');
+        $crud->display_as('status','Status');
 
         $this->mTitle.= 'Faculties';
         $this->render_crud();
     }
+
 }

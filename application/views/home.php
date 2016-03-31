@@ -8,7 +8,7 @@
         ?>
         alert('You have CMR need to be commented:\n\n<?php
             foreach ($cmrdata as $cmr) {
-            ?>• <?php
+            ?>•☺ <?php
             $date = time();
             $cmrtime = strtotime($cmr['date_approved']);
             $diff = $cmrtime + 1209600;

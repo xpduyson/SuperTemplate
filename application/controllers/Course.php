@@ -14,35 +14,30 @@ class Course extends Admin_Controller
     public function index()
     {
         $crud = $this->generate_crud('course');
-       // $crudfac = $this->generate_crud('faculties');
-        // $crud->columns('author_id', 'category_id', 'title', 'image_url', 'tags', 'publish_time', 'status');
-        // $crud->set_field_upload('image_url', UPLOAD_DEMO_BLOG_POST);
-        // $crud->set_relation('category_id', 'demo_blog_categories', 'title');
-        // $crud->set_relation_n_n('tags', 'demo_blog_posts_tags', 'demo_blog_tags', 'post_id', 'tag_id', 'title');
 
         $crud->set_rules('couid','Course-ID','required');
         $crud->set_rules('faculty','Faculties-Name','required');
         $crud->set_rules('coutitle','Course-Details','required');
         $crud->set_rules('coutime', 'coutime','required');
-        //$crud->set_rules('status','Status','required');
-        //set status when insert active
-
 
         $crud->callback_edit_field('coutime',array($this,'edit_field_callback_1'));
+        $crud->callback_edit_field('users',array($this,'edit_field_callback_3'));
         $crud->callback_add_field('status',array($this,'edit_field_callback_2'));
         $crud->callback_column('coutime',array($this,'valueToEuro'));
-
-
+        $crud->callback_column('users',array($this,'valueUser'));
         $crud->fields('couid','faculty','coutitle','status');
-        $crud->edit_fields('couid','faculty','coutitle','coutime','status');
+        $crud->edit_fields('couid','faculty','coutitle','coutime','CourseStaff','status');
         $crud->set_relation('faculty','faculties','facdetails','status=1');
+        $crud->set_relation_n_n('CourseStaff','coursestaff','users','courses','users','username');
+       // $crud->set_relation_n_n('users', 'users_groups', 'users', 'user_id', 'group_id', 'username');
 
-        $crud->display_as('coutime','Time(Month)');
-      //  $crud->callback_before_insert(array($this,'encrypt_password_callback'));
-        $crud->callback_before_update(array($this,'beforeUpdate'));
+        $crud->display_as('couid','Course ID');
+        $crud->display_as('faculty','Faculty');
+        $crud->display_as('coutitle','Course Title');
+        $crud->display_as('coutime','Course Time(Month)');
+       $crud->callback_before_update(array($this,'beforeUpdate'));
+       $crud->callback_before_insert(array($this,'beforeInsert'));
 
-        $crud->callback_before_insert(array($this,'beforeInsert'));
-       //    $crud->callback_after_insert(array($this, 'after_insert'));
         $this->mTitle.= 'Course';
         $this->render_crud($crud);
     }
@@ -50,6 +45,16 @@ class Course extends Admin_Controller
     function valueToEuro($value, $row)
     {
         return $value.' Month';
+    }
+    function valueUser($value, $row)
+    {   $asd=$row->couid;
+        $c=$asd+'';
+       // $iduser = $this->db->where("courses",$row->couid)->get('coursestaff')->row()->users;
+       // $nameuser = $this->db->where('id',$iduser)->get('users')->row()->username;
+
+
+
+        return $c.'-'.$row->couid;
     }
     function encrypt_password_callback($post_array) {
 
@@ -66,10 +71,16 @@ class Course extends Admin_Controller
         return $post_array;
     }
     function beforeUpdate($post_array)
-    {
+    {   $id = $this->uri->segment(4);
+
+      //  $idUser = $this->db->where("username",$post_array['asd'])->get('users')->row()->id;
+       // $data = array('courses' => $id, 'users' => $post_array['asd']);
+
+      //  $this->db->insert('coursestaff', $data);
+
         if($post_array['status']=='1'){
             $time=0;
-            $id = $this->uri->segment(4);
+
             $faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
             $coutime = $this->db->where("couid",$id)->get('course')->row()->coutime;
             $result = $this->db->where("faculty",$faculty)->get('course');
@@ -89,9 +100,10 @@ class Course extends Admin_Controller
 
                 return FALSE;
             }
-
+            return true;
         }
-        return TRUE;
+
+        return true;
     }
     public function get_form_validation(){
         if($this->form_validation === null)
@@ -134,11 +146,30 @@ class Course extends Admin_Controller
         return ' <input type="number" value="'.$max.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
     }
     function edit_field_callback_2($value)
+{
+
+
+
+    return 'inactive';
+}
+    function edit_field_callback_3($value)
     {
+       // $id = $this->uri->segment(4);
+       // $users = $this->db->get('users');
+       // $row=$users->row();
+      //  $options = array();
+       // foreach($users->result() as $row)
+       // {
+           // $row=$users->row()->username;
+       //     $options[$row->id] = $row->username;
+       // }
 
-
-
-        return 'inactive';
+      //  $status = $this->db->where("couid",$id)->get('course')->row()->status;
+       // $result = $this->db->where("faculty",$faculty)->get('course');
+      //  $this->load->helper('form');
+        // $options = array();
+       // return  form_dropdown('asd', $options, $value,'asd');
     }
+
 
 }

@@ -180,12 +180,12 @@ class Grocery_crud_model  extends CI_Model  {
         //set_relation_n_n special queries. We prefer sub queries from a simple join for the relation_n_n as it is faster and more stable on big tables.
         if(!empty($this->relation_n_n))
         {
-            if($this->table_name == 'course')
-            {
-                $select ='cmr.cmrid,course.coutitle,cmr.courses,cmr.academic_year';
-            }else{
+          //  if($this->table_name == 'course')
+           // {
+           //     $select ='cmr.cmrid,course.coutitle,cmr.courses,cmr.academic_year';
+           // }else{
                 $select = "{$this->table_name}.*";
-            }
+          //  }
            
             $select = $this->relation_n_n_queries($select);
 
