@@ -26,7 +26,7 @@ class Login extends MY_Controller {
 			{
 				// login succeed
 				$messages = $this->ion_auth->messages();
-				$data = $this->Cmr_model->getNeededCommentCMR();
+				$data = $this->Cmr_model->getNeededCommentCMR($this->ion_auth->user()->row()->faculty);
 				$this->session->set_flashdata('cmrNotComment',$data);
 				$this->system_message->set_success($messages);
 				redirect('home');

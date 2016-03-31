@@ -15,10 +15,12 @@
             <!-- Create general CMR information form-->
             <table class="table">
                 <thead>
+
                 <tr>
                     <th class="bg-primary" style="text-align: center" colspan="2">COURSE MONITORING REPORT</th>
                 </tr>
-                <tr >
+                <h4><b class="col-md-12 bg-danger" style="text-align: center;"><?php echo $this->session->flashdata('errorMsg'); ?></b></h4>
+                <tr>
                     <td class="col-md-2" id="addon1"><strong>Academic Year</strong></td>
                     <td class="col-md-10">
                         <select required name="acaYear" id="acaYear">

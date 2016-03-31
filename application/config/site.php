@@ -66,20 +66,10 @@ $config['site'] = array(
 			'url'		=> '',
 			'icon'		=> 'fa fa-home',
 		),
-		'faculties' => array(
-			'name'		=> 'Faculty',
-			'url'		=> 'faculty',
-			'icon'		=> 'glyphicon glyphicon-list-alt',
-		),
-		'course' => array(
-			'name'		=> 'Course',
-			'url'		=> 'course',
-			'icon'		=> 'glyphicon glyphicon-book',
-		),
 
 		'cmr' => array(
 			'name' => 'CMR',
-			'url' => 'CMR',
+			'url' => 'cmr',
 			'children' => array(
 				'View CMR' => 'cmr',
 				'Add CMR' => 'cmr/Add',
@@ -130,7 +120,6 @@ $config['site'] = array(
 		'panel/admin_user'			=> array('webmaster'),
 		'panel/admin_user_create'	=> array('webmaster'),
 		'panel/admin_user_group'	=> array('webmaster'),
-		'course'					=> array('PVC'),
 		'cmr/Add'					=> array('CL'),
 
 	),
