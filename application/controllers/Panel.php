@@ -50,7 +50,6 @@ class Panel extends Admin_Controller {
 	// Create Admin User
 	public function admin_user_create()
 	{
-		//TODO: sửa id phải nhập thủ công chứ ko auto inc 
 		// (optional) only top-level admin user groups can create Admin User
 		//$this->verify_auth(array('webmaster'));
 
