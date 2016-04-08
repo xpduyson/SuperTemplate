@@ -33,23 +33,6 @@ class Cmr extends Admin_Controller{
         $crud->display_as('c_m_r_status','Status');
         $crud->set_relation('c_m_r_status','cmr_status','id');
 
-             $crud->callback_column($this->unique_field_name('c_m_r_status'),function($value, $row) {
-                 $this->db->select('dlt_comment,cm_checked')
-                     ->from('cmr_status')
-                     ->where('id',$value);
-                 $stat = $this->db->get()->row();
-                 $result = '';
-                 if($stat->dlt_comment != '')
-                     $result.= 'Commented - ';
-                 else
-                     $result .= 'No comment - ';
-                 if($stat->cm_checked == 0)
-                     $result .= 'Not Approved';
-                 if($stat->cm_checked == 1)
-                     $result .= 'Approved';
-
-                 return $result;
-             });
 
 
         if ($this->ion_auth->in_group(array('DLT')))
@@ -103,7 +86,7 @@ class Cmr extends Admin_Controller{
             $crud->add_action('Delete', '', 'cmr/deleteCMR','ui-icon-plus');
 
         }
-        
+
         if ($this->ion_auth->in_group(array('CM')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
@@ -119,15 +102,7 @@ class Cmr extends Admin_Controller{
             $crud->unset_add();
             $crud->unset_edit();
 
-        }
-        $crud->unset_delete();
-        $crud->unset_read();
-        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-plus');
-        $this->mTitle = 'Course Monitoring Report';
-        $this->render_crud();
-
-
-        if ($this->ion_auth->in_group(array('Guest')))
+        }if ($this->ion_auth->in_group(array('guest')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
                 $this->db->select('coutitle')
@@ -141,9 +116,17 @@ class Cmr extends Admin_Controller{
             $crud->unset_add();
             $crud->unset_edit();
         }
+        $crud->unset_delete();
+        $crud->unset_read();
+        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-plus');
+        $this->mTitle = 'Course Monitoring Report';
+        $this->render_crud();
 
 
-        if ($this->ion_auth->in_group(array('webmaster')))
+
+
+
+        if ($this->ion_auth->in_group(array('admin')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
                 $this->db->select('coutitle')
@@ -168,9 +151,9 @@ class Cmr extends Admin_Controller{
         $this->render('cmr/add_cmr');
 
     }
-    
+
     public function detailsCMR($primary_key){
- 
+
         $info = $this->Cmr_model->getCmrInfo($primary_key);
         $details = $this->Cmr_model->getCmrDetails($info->c_m_r__c_w);
         $status = $this->Cmr_model->getCmrStatus($info->c_m_r_status);
@@ -294,9 +277,9 @@ class Cmr extends Admin_Controller{
         $this->db->where('id', $this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
         redirect('cmr/detailsCMR/'.$this->session->userdata("cmrStatus3"));
-        
+
     }
-    
+
     public function approveCmr(){
 
         $value = array(

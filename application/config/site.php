@@ -50,11 +50,11 @@ $config['site'] = array(
     // AdminLTE settings
     'adminlte' => array(
         'webmaster' => array('skin' => 'skin-black'),
-        'PVC' => array('skin' => 'skin-blue-light'),
+        'PVC' => array('skin' => 'skin-green-light'),
         'DLT' => array('skin' => 'skin-blue-light'),
-        'CL' => array('skin' => 'skin-blue-light'),
-        'CM' => array('skin' => 'skin-blue-light'),
-        'Guest' => array('skin' => 'skin-blue-light')
+        'CL' => array('skin' => 'skin-red-light'),
+        'CM' => array('skin' => 'skin-pink-light'),
+        'guest' => array('skin' => 'skin-yellow-light')
     ),
 
     // Menu items which support icon fonts, e.g. Font Awesome

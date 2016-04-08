@@ -18,3 +18,4 @@ class Admin_user_model extends MY_Model
         return $data;
     }
 }
+//TODO - Thong tin ve CL( soan bao nhieu, bao nhieu da submit, ....)
