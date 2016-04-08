@@ -32,6 +32,7 @@ class Cmr extends Admin_Controller{
         $crud->display_as('cmrid','ID');
         $crud->display_as('c_m_r_status','Status');
         $crud->set_relation('c_m_r_status','cmr_status','id');
+
              $crud->callback_column($this->unique_field_name('c_m_r_status'),function($value, $row) {
                  $this->db->select('dlt_comment,cm_checked')
                      ->from('cmr_status')
@@ -85,7 +86,6 @@ class Cmr extends Admin_Controller{
             $crud->unset_edit();
         }
 
-
         if ($this->ion_auth->in_group(array('CL')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
@@ -103,9 +103,7 @@ class Cmr extends Admin_Controller{
             $crud->add_action('Delete', '', 'cmr/deleteCMR','ui-icon-plus');
 
         }
-
-
-
+        
         if ($this->ion_auth->in_group(array('CM')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
@@ -129,7 +127,7 @@ class Cmr extends Admin_Controller{
         $this->render_crud();
 
 
-        if ($this->ion_auth->in_group(array('guest')))
+        if ($this->ion_auth->in_group(array('Guest')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
                 $this->db->select('coutitle')
@@ -145,8 +143,7 @@ class Cmr extends Admin_Controller{
         }
 
 
-
-        if ($this->ion_auth->in_group(array('admin')))
+        if ($this->ion_auth->in_group(array('webmaster')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
                 $this->db->select('coutitle')

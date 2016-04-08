@@ -40,8 +40,8 @@
                         <div>
                             <?php foreach ($groups as $group): ?>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="groups[]"
-                                           value="<?php echo $group->id; ?>"> <?php echo $group->name; ?>
+                                    <input type="radio" name="groups[]"
+                                           value="<?php echo $group->id; ?>"> <?php echo $group->description; ?>
                                 </label>
                             <?php endforeach; ?>
                         </div>

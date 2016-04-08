@@ -55,7 +55,7 @@ $config['site'] = array(
 		'DLT'		=> array('skin' => 'skin-red'),
 		'CL'		=> array('skin' => 'skin-blue'),
 		'CM'		=> array('skin' => 'skin-green'),
-		'guest'		=> array('skin' => 'skin-blue-light')
+		'Guest'		=> array('skin' => 'skin-blue-light')
 	),
 
 	// Menu items which support icon fonts, e.g. Font Awesome
@@ -114,6 +114,7 @@ $config['site'] = array(
 		'panel/admin_user_group'	=> array('webmaster'),
 		'course'					=> array('PVC'),
 		'cmr/Add'					=> array('CL'),
+		'cmr' 						=> array('PVC','DLT','CM','guest','CL')
 
 	),
 
