@@ -34,5 +34,7 @@
 			<?php echo modules::run('adminlte/widget/app_btn', 'fa fa-sign-out', 'Logout', 'panel/logout'); ?>
 		<?php echo modules::run('adminlte/widget/box_close'); ?>
 	</div>
+
+    TODO: SOME INFO ABOUT CMR
 </div>
 

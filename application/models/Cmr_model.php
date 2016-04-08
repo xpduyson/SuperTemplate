@@ -25,8 +25,12 @@ class Cmr_model extends CI_Model{
     }
 
     public function getCourses(){
+        $user = $this->ion_auth->user()->row();
+        $user_id = $user->id;
         $this->db->select('*')
-            ->from('course');
+            ->from('course')
+            ->join('coursestaff','course.couid = coursestaff.courses')
+            ->where('coursestaff.users',$user_id);
         $data = $this->db->get()->result_array();
         return $data;
     }
