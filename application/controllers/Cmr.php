@@ -144,7 +144,8 @@ class Cmr extends Admin_Controller{
             $crud->unset_edit();
         }
 
-        
+
+
         if ($this->ion_auth->in_group(array('admin')))
         {
             $crud->callback_column($this->unique_field_name('courses'),function($value, $row) {
