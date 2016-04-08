@@ -39,6 +39,9 @@ class Panel extends Admin_Controller {
 		// disable direct create / delete Admin User
 		$crud->unset_add();
 		$crud->unset_delete();
+        
+        //FACULTY
+        $crud->set_relation('faculty','faculties','facdetails');
 
 		$this->mTitle.= 'Admin Users';
 		$this->render_crud();
