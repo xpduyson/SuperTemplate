@@ -210,7 +210,117 @@ class Cmr_model extends CI_Model{
             return null;
     }
 
+    public function getPVCList(){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->join('faculties','users.faculty = faculties.facid','left')
+            ->join('af','faculties.facid = af.faculty','left')
+            ->where('users_groups.group_id',2);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return 0;
+        else
+            return $data->result_array();
+    }
 
+    public function getDLTList(){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->join('faculties','users.faculty = faculties.facid','left')
+            ->join('af','faculties.facid = af.faculty','left')
+            ->where('users_groups.group_id',3);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return 0;
+        else
+            return $data->result_array();
+    }
     
+    public function getCMList(){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->join('faculties','users.faculty = faculties.facid','left')
+            ->join('af','faculties.facid = af.faculty','left')
+            ->join('course','course.faculty = faculties.facid','left')
+            ->where('users_groups.group_id',5);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return 0;
+        else
+            return $data->result_array();
+    }
+    
+    public function getCLList(){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->join('faculties','users.faculty = faculties.facid','left')
+            ->join('af','faculties.facid = af.faculty','left')
+            ->join('course','course.faculty = faculties.facid','left')
+            ->where('users_groups.group_id',4);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return 0;
+        else
+            return $data->result_array();
+    }
+    
+    public function getCourseSize(){
+        $this->db->select('*')
+                 ->from('course');
+        $data = $this->db->get()->result_array();
+        return count($data);
+    }
+    
+    public function getFacultySize(){
+        $this->db->select('*')
+            ->from('faculties');
+        $data = $this->db->get()->result_array();
+        return count($data);
+    }
+    
+    public function getCMRSize(){
+        $this->db->select('*')
+            ->from('cmr');
+        $data = $this->db->get()->result_array();
+        return count($data);
+    }
+    
+    public function getCourseWithoutCMR($key)
+    {
+        $sql = "select *
+        from course
+        LEFT JOIN af on course.faculty = af.faculty
+        LEFT JOIN faculties on faculties.facid = af.faculty
+        where af.academicyear = ? AND not exists(select * from cmr where cmr.courses = course.couid)";
+        $data = $this->db->query($sql,array($key))->result_array();
+        return $data;
+    }
 
+    public function getCMRWithoutComment($key)
+    {
+        $sql = "select *
+                from cmr
+                LEFT JOIN course on course.couid = cmr.courses
+                LEFT JOIN cmr_status on cmr.c_m_r_status = cmr_status.id
+                LEFT JOIN af on course.faculty = af.faculty
+                where af.academicyear = ? AND cmr_status.dlt_comment is null";
+        $data = $this->db->query($sql,array($key))->result_array();
+        return $data;
+    }
+
+    public function getCMRWithoutApproved($key)
+    {
+        $sql = "select *
+                from cmr
+                LEFT JOIN course on course.couid = cmr.courses
+                LEFT JOIN cmr_status on cmr.c_m_r_status = cmr_status.id
+                LEFT JOIN af on course.faculty = af.faculty
+                where af.academicyear = ? AND cmr_status.cm_checked = 0";
+        $data = $this->db->query($sql,array($key))->result_array();
+        return $data;
+    }
 }
