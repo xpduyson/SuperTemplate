@@ -14,75 +14,122 @@ class Course extends Admin_Controller
     public function index()
     {
         $crud = $this->generate_crud('course');
-       // $crudfac = $this->generate_crud('faculties');
-        // $crud->columns('author_id', 'category_id', 'title', 'image_url', 'tags', 'publish_time', 'status');
-        // $crud->set_field_upload('image_url', UPLOAD_DEMO_BLOG_POST);
-        // $crud->set_relation('category_id', 'demo_blog_categories', 'title');
-        // $crud->set_relation_n_n('tags', 'demo_blog_posts_tags', 'demo_blog_tags', 'post_id', 'tag_id', 'title');
 
-     //   $crud->set_rules('couid','Course-ID','required');
-     //   $crud->set_rules('faculty','Faculties-Name','required');
-     //   $crud->set_rules('coutitle','Course-Details','required');
-     //   $crud->set_rules('coutime','Time','required');
-     //   $crud->set_rules('status','Status','required');
-        $crud->callback_before_insert(array($this,'setstatus'));
-        if($crud->getState()=='edit'){
-            $pk = $crud->getStateInfo()->primary_key;
+        $crud->set_rules('couid','Course-ID','required');
+        $crud->set_rules('faculty','Faculties-Name','required');
+        $crud->set_rules('coutitle','Course-Details','required');
+        $crud->set_rules('coutime', 'coutime','required');
 
-        }
-        $crud->callback_edit_field('coutime',array($this,'edit_field_callback_1'));
 
-        $crud->callback_column('coutime',array($this,'valueToEuro'));
-        $crud->callback_before_insert(array($this,'setstatus'));
-        $crud->fields('couid','faculty','coutitle','coutime');
-        $crud->edit_fields('couid','faculty','coutitle','coutime','status');
-        $crud->set_relation('faculty','faculties','facdetails');
-        $crud->display_as('coutime','Time(Month)');
-       // $crud->set_rules('faculty','faculties','edit_field_callback_1');
-       // $crud->set_rules('coutime','Time','max=12');
+        $crud->callback_add_field('status',array($this,'edit_field_callback_status'));
+        $crud->callback_column('coutime',array($this,'valueMonth'));
+        $crud->callback_column('users',array($this,'valueUser'));
+        $crud->columns('couid','faculty','coutitle','coutime','coulevel','coucredit','CourseStaff','status');
+        $crud->fields('couid','faculty','coutitle','status');
+        $crud->edit_fields('couid','faculty','coutitle','coutime','coulevel','coucredit','CourseStaff','status');
+        //set ralation faculty
+        $crud->set_relation('faculty','faculties','facdetails','status=1');
+        //check and get staff
+        $users_groups = $this->db->where("group_id",4)->get('users_groups')->row()->user_id;
+        $crud->set_relation_n_n('CourseStaff','coursestaff','users','courses','users','username',null,'id='.$users_groups);
+
+        //set table and display
+        $crud->display_as('couid','Course ID');
+        $crud->display_as('faculty','Faculty');
+        $crud->display_as('coutitle','Course Title');
+        $crud->display_as('coutime','Course Time(Month)');
+        $crud->set_theme('datatables');
+        //check before update
+       $crud->callback_before_update(array($this,'beforeUpdate'));
+       $crud->callback_before_insert(array($this,'beforeInsert'));
+        //add setcourse and button active
+        $crud->add_action('SetCourse', '', 'course/edit','ui-icon-plus');
+        $crud->add_action('In/Active', '', 'course/active','ui-icon-plus');
+        //not set edit and delete
+        $crud->unset_delete();
+        $crud->unset_edit();
         $this->mTitle.= 'Course';
         $this->render_crud($crud);
     }
-    public function gettime(){
+    function edit($value)
+    {
 
+        $this->mTitle.= 'Edit';
+        $this->render('course/edit');
+    }
+    function active($value)
+    {   //get status from id
+        $active = $this->db->where('couid',$value)->get('course')->row()->status;
+        //update status
+        if($active==1){
+            $data = array('status' => 0);
+            $this->db->where('couid',$value);
+            $this->db->update('course', $data);
+            redirect('course');
+        }else{
+            $data = array('status' => 1);
+            $this->db->where('couid',$value);
+            $this->db->update('course', $data);
+            redirect('course');
+        }
 
     }
-    function valueToEuro($value, $row)
+    function valueMonth($value, $row)
     {
         return $value.' Month';
     }
-    function setstatus($post_array)
+
+    function beforeInsert($post_array)
     {
-        if(empty($post_array['status']))
-        {
-            $post_array['status'] = '1';
-        }
+        echo 'before update';
+        $post_array['status'] = '0';
+
         return $post_array;
     }
-    function edit_field_callback_1($value)
+
+
+
+    function edit_field_callback_status($value)
+{
+    return 'inactive';
+}
+
+    function editCourse()
     {
-        $time=0;
-        $id = $this->uri->segment(4);
-        $faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
-        $result = $this->db->where("faculty",$faculty)->get('course');
-        if($result->num_rows() > 0)
-        {
-            foreach($result->result() as $row)
-            {
-                if($row->status==1){
-                    $time += $row->coutime;
-                }
-                //$time += $row->coutime;
-
-            }
-            echo $time;
-            //$time-=$value;
-            $a=$time-$value;
-            $max=12-$a;
+        //get data from page edit
+        $id=$_POST['txtid'];
+        $title=$_POST['txtinputtitle'];
+        $time=$_POST['txttime'];
+        $level=$_POST['level'];
+        $credit=$_POST['txtcredit'];
+        $cl=$_POST['cl'];
+        $cm=$_POST['cm'];
+        //set data update course
+          $data = array('coutitle' => $title,
+              'coutime' => $time,
+              'coulevel' => $level,
+              'coucredit' => $credit
+          );
+        $this->db->where('couid',$id);
+         $this->db->update('course', $data);
+        //find data cl,cm in coursestaff and edit
+        $idcoursestaff = $this->db->where("courses",$id)->get('coursestaff')->num_rows();
+        $idcl = $this->db->where("username",$cl)->get('users')->row()->id;
+        $idcm = $this->db->where("username",$cm)->get('users')->row()->id;
+        if($idcoursestaff>0){
+            $datacl = array('users' => $idcl,'courses' => $id);
+            $datacm = array('users' => $idcm,'courses' => $id);
+            $this->db->delete('coursestaff', array('courses' => $id));
+            $this->db->insert('coursestaff', $datacl);
+            $this->db->insert('coursestaff', $datacm);
+        }else{
+            $datacl = array('users' => $idcl,'courses' => $id);
+            $datacm = array('users' => $idcm,'courses' => $id);
+            $this->db->insert('coursestaff', $datacl);
+            $this->db->insert('coursestaff', $datacm);
         }
-
-
-        return ' <input type="number" max="'.$max.'"  value="'.$max.'" name="coutime" style="width:500px">( total month Faculty not >12Moth-Use:'.$a.')';
+        redirect('course');
     }
+
 
 }
