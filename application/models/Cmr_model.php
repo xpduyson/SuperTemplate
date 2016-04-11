@@ -43,21 +43,18 @@ class Cmr_model extends CI_Model{
         return $data;
     }
 
-  
     public function getYearCmr(){
         $this->db->select('*')
             ->from('academicyear');
         $data = $this->db->get()->result_array();
         return $data;
     }
-    
-    
+
     public function getCmrInfo($key){
-        $this->db->select('cmrid,courses,course.coutitle,academic_year,c_m_r__c_w,c_m_r_status')
+        $this->db->select('cmrid,courses,course.coutitle,academic_year,c_m_r_status,mark_planning')
                  ->from('cmr')
                  ->join('cmr_status','cmr.c_m_r_status = cmr_status.id','left')
                  ->join('course','cmr.courses = course.couid','left')
-                 ->join('cmr_coursework','cmr.c_m_r__c_w = cmr_coursework.id','left')
                  ->where('cmrid',$key);
         $info = $this->db->get()->row();
         return $info;
@@ -70,27 +67,7 @@ class Cmr_model extends CI_Model{
         $info = $this->db->get()->row();
         return $info;
     }
-    
-    public function getCmrDetails($key){
-        $cw = $this->db->get_where('cmr_coursework',array('id' => $key))->row();
-        $cw1 = $this->db->get_where('cmr_detail',array('id' => $cw->cw1))->row();
-        $cw2 = $this->db->get_where('cmr_detail',array('id' => $cw->cw2))->row();
-        $cw3 = $this->db->get_where('cmr_detail',array('id' => $cw->cw3))->row();
-        $cw4 = $this->db->get_where('cmr_detail',array('id' => $cw->cw4))->row();
-        $cwoverall = $this->db->get_where('cmr_detail',array('id' => $cw->overall))->row();
-        $cwexam = $this->db->get_where('cmr_detail',array('id' => $cw->exam))->row();
 
-        $details = array(
-            'cw1' => $cw1,
-            'cw2' => $cw2,
-            'cw3' => $cw3,
-            'cw4' => $cw4,
-            'cwoverall' => $cwoverall,
-            'cwexam' => $cwexam
-        );
-        return $details;
-    }
-    
     public function getNeededCommentCMR($key){
         $this->db->select('cmrid,cmr_status.dlt_comment,cmr_status.date_approved,faculties.facname,
                            course.couid,course.coutitle,users.id,users_groups.group_id')
@@ -100,7 +77,7 @@ class Cmr_model extends CI_Model{
                  ->join('faculties','faculties.facid = course.faculty','left')
                  ->join('users','users.faculty = faculties.facid','left')
                  ->join('users_groups','users.id = users_groups.user_id','left')
-                 ->where('dlt_comment','')
+                 ->where('dlt_comment',null)
                  ->where('users.faculty',$key)
                  ->where('users_groups.group_id',3)
                  ->where('cmr_status.cm_checked',1);
@@ -119,20 +96,7 @@ class Cmr_model extends CI_Model{
 
     }
 
-    public function getApprovedCM($key){
-        $this->db->select('users.first_name')
-            ->from('coursestaff')
-            ->join('users','users.id = coursestaff.users')
-            ->join('course','course.couid = coursestaff.courses')
-            ->join('cmr','cmr.courses = course.couid ')
-            ->join('users_groups','users.id = users_groups.user_id ')
-            ->where('cmr.cmrid',$key)
-            ->where('users_groups.group_id',5);
-        return $this->db->get()->row();
-
-    }
-
-  public function filterYear($cou,$year){
+    public function filterYear($cou,$year){
     $this->db->select('courses,academic_year')
              ->from('cmr')
              ->where('courses',$cou)
@@ -143,4 +107,110 @@ class Cmr_model extends CI_Model{
       else
           return true;
   }
+    
+    public function getCourseInfo($cou){
+
+        $this->db->select('*')
+            ->from('course')
+            ->join('faculties','faculties.facid = course.faculty')
+            ->join('af','af.faculty = faculties.facid')
+            ->where('couid',$cou);
+        $data = $this->db->get()->row();
+        $CM = $this->getCM($data->couid);
+        $PVC = $this->getPVC($data->faculty);
+        $DLT = $this->getDLT($data->faculty);
+        $faculty = $this->getFalName($data->faculty);
+        $status = $this->getCourseStatus($cou);
+        if($status == 0)
+            $stat = 'Inactive';
+        else
+            $stat = 'Active';
+        $result = array(
+            'faculty' => $faculty,
+            'CM' => $CM,
+            'PVC' => $PVC,
+            'DLT' => $DLT,
+            'courseTime' => $data->coutime,
+            'courseLevel' => $data->coulevel,
+            'courseCredit' => $data->coucredit,
+            'courseStatus' => $stat,
+            'courseYear' => $data->academicyear
+        );
+        return $result;
+  }
+
+    public function getCourseStatus($key){
+        $this->db->select('*')
+            ->from('course')
+            ->where('couid',$key);
+        $data = $this->db->get()->row();
+        return $data->status;
+    }
+
+    public function getFalName($key){
+        $this->db->select('*')
+            ->from('faculties')
+            ->where('facid',$key);
+        $data = $this->db->get()->row();
+        return $data->facname;
+    }
+
+    public function getPVC($key){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->where('faculty',$key)
+            ->where('users_groups.group_id',2);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return "Not Assigned";
+        else
+            return $data->row()->first_name;
+    }
+
+    public function getDLT($key){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->where('faculty',$key)
+            ->where('users_groups.group_id',3);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return "Not Assigned";
+        else
+            return $data->row()->first_name;
+    }
+
+    public function getCM($key){
+        $this->db->select('*')
+            ->from('users')
+            ->join('users_groups','users_groups.user_id = users.id','left')
+            ->join('coursestaff','coursestaff.users = users.id','left')
+            ->where('coursestaff.courses',$key)
+            ->where('users_groups.group_id',5);
+        $data = $this->db->get();
+        if($data->num_rows() == 0)
+            return "Not Assigned";
+        else
+            return $data->row()->first_name;
+    }
+    
+    public function getCMForInsert($key){
+        $this->db->select('users.id')
+            ->from('users')
+            ->join('coursestaff','users.id = coursestaff.users')
+            ->join('users_groups','users_groups.user_id = users.id')
+            ->join('course','course.couid = coursestaff.courses')
+            ->where('course.couid',$key)
+            ->where('users_groups.group_id',5);
+        $data = $this->db->get();
+        if($data->num_rows() > 0)
+            return $data->row();
+        else
+            return null;
+    }
+
+
+    
+
 }

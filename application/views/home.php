@@ -2,7 +2,6 @@
     $(document).ready(function() {
         <?php
         $cmrdata = $this->session->flashdata('cmrNotComment');
-        $cmrdate = array();
         $role = $this->ion_auth->in_group(array('DLT'));
         if($role == true)
         {
