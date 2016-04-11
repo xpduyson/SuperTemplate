@@ -47,7 +47,14 @@
 
             ?>
             <?php
-            if($this->ion_auth->in_group(array('admin')))
+            if($this->ion_auth->in_group(array('webmaster')))
+            {
+            ?> document.getElementById('btnSave').style.visibility = 'hidden'
+            document.getElementById('btnApprove').style.visibility = 'hidden';;<?php
+            }
+            ?>
+            <?php
+            if($this->ion_auth->in_group(array('guest')))
             {
             ?> document.getElementById('btnSave').style.visibility = 'hidden'
             document.getElementById('btnApprove').style.visibility = 'hidden';;<?php
@@ -69,100 +76,118 @@
                     <th class="bg-primary" style="text-align: center" colspan="2">COURSE MONITORING REPORT</th>
                 </tr>
                 </thead>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+            <table class="table">
                 <tbody>
                 <tr >
-                    <td class="col-md-2" id="addon1"><strong>Academic Year</strong></td>
-                    <td class="col-md-10">
+                    <td class="col-md-2"><strong>Academic Year</strong></td>
+                    <td class="col-md-2">
                         <?php echo $cmrInfo->academic_year ?>
                     </td>
                 </tr>
                 <tr >
-                    <td class="col-md-2"  id="addon2"><strong>Course</strong></td>
-
-                    <td class="col-md-10">
+                    <td class="col-md-2" ><strong>Course</strong></td>
+                    <td class="col-md-2">
                         <?php echo $cmrInfo->coutitle ?>
                     </td>
                 </tr>
+
                 <tr >
-                    <td class="col-md-2"  id="addon3"><strong>Course Leader</strong></td>
-                    <td class="col-md-10">
-                        <?php echo $user->first_name; ?>
-                        <input hidden name="userID" value="<?php echo $cmrUser?>">
+                    <td class="col-md-2" ><strong>Faculty</strong></td>
+                    <td class="col-md-2">
+                        <?php echo $courseFaculty; ?>
                     </td>
 
                 </tr>
-                <tr>
-                    <td class="col-md-2"  id="addon3"><strong>Course Manager</strong></td>
+                <tr >
+                    <td class="col-md-2" ><strong>Time</strong></td>
+                    <td class="col-md-2">
+                        <?php echo $courseTime; ?> months
 
-                    <td class="col-md-10" id="approveCM"><?php if(!empty($approvedCM))echo $approvedCM->first_name; ?> </td>
+                    </td>
+
+                </tr>
+                <tr >
+                    <td class="col-md-2" ><strong>Level</strong></td>
+                    <td class="col-md-2">
+                        <?php echo $courseLevel; ?>
+
+                    </td>
+
+                </tr>
+                <tr >
+                    <td class="col-md-2" ><strong>Credit</strong></td>
+                    <td class="col-md-2">
+                        <?php echo $courseCredit; ?>
+
+                    </td>
+
+                </tr>
+                <tr >
+                    <td class="col-md-2" ><strong>Status</strong></td>
+                    <td class="col-md-2">
+                        <?php echo $courseStatus; ?>
+
+                    </td>
+
                 </tr>
                 <tr id="approveDate">
-                    <td class="col-md-2"  id="addon3"><strong>Approved Date</strong></td>
+                    <td class="col-md-2""><strong>Mark Planning</strong></td>
+                    <td class="col-md-2" id="approveCM">
+                        <?php echo $courseMark; ?> %
+                    </td>
+                </tr>
+                <tr id="approveDate">
+                    <td class="col-md-2""><strong>Approved Date</strong></td>
 
-                    <td class="col-md-10" id="approveCM"><?php if($cmrStatus->cm_checked == 1){
+                    <td class="col-md-2" id="approveCM"><?php if($cmrStatus->cm_checked == 1){
                             echo $cmrStatus->date_approved;
                         }
                         else
                         {
                             echo 'Not Approved';
                         }
-                         ?> </td>
+                        ?> </td>
                 </tr>
                 </tbody>
-
-
             </table>
-        </div>
+            </div>
 
-        <!-- Create statistic data form-->
-        <div class="row">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th class="bg-primary" colspan="7">Statistical Data</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th></th>
-                    <th>CW1</th>
-                    <th>CW2</th>
-                    <th>CW3</th>
-                    <th>CW4</th>
-                    <th>EXAM</th>
-                    <th>OVERALL</th>
-                </tr>
-                <tr>
-                    <td><strong>Mean</strong></td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw1']->mean ?>" required size="3" min="1" max="100" type="number" name="details[0][mean]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw2']->mean ?>" required size="3" min="1" max="100" type="number" name="details[1][mean]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw3']->mean ?>" required required size="3" min="1" max="100" type="number" name="details[2][mean]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw4']->mean ?>" required size="3" min="1" max="100" type="number" name="details[3][mean]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwexam']->mean ?>" required size="3" min="1" max="100" type="number" name="details[4][mean]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwoverall']->mean ?>" required size="3" min="1" max="100" type="number" name="details[5][mean]"> </td>
-                </tr>
-                <tr>
-                    <td ><strong>Median</strong></td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw1']->median ?>" required size="3" min="1" max="100" type="number" name="details[0][median]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw2']->median ?>" required size="3" min="1" max="100" type="number" name="details[1][median]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw3']->median ?>" required size="3" min="1" max="100" type="number" name="details[2][median]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw4']->median ?>" required size="3" min="1" max="100" type="number" name="details[3][median]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwexam']->median ?>" required size="3" min="1" max="100" type="number" name="details[4][median]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwoverall']->median ?>" required size="3" min="1" max="100" type="number" name="details[5][median]"> </td>
-                </tr>
-                <tr>
-                    <td><strong>Standard Deviation</strong></td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw1']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[0][standarddeviation]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw2']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[1][standarddeviation]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw3']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[2][standarddeviation]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cw4']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[3][standarddeviation]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwexam']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[4][standarddeviation]"> </td>
-                    <td><input disabled value="<?php echo $cmrDetails['cwoverall']->standarddeviation ?>" required size="3" min="1" max="100" type="number" name="details[5][standarddeviation]"> </td>
-                </tr>
+                <div class="col-md-8">
+                    <table class="table">
+                        <tr class="row" >
+                            <td class="col-md-4" ><strong>Course Leader</strong></td>
+                            <td class="col-md-2">
+                                <?php echo $user->first_name; ?>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col-md-4"><strong>Course Moderator</strong></td>
+                            <td class="col-md-2" id="approveCM">
+                                <?php echo $courseCM; ?>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col-md-4"><strong>Pro-Vice Chancellor </strong></td>
+                            <td class="col-md-2">
+                                <?php echo $coursePVC; ?>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col-md-4"><strong>Director of Learning and Quality </strong></td>
+                            <td class="col-md-2">
+                                <?php echo $courseDLT; ?>
+                            </td>
+                        </tr>
+                        </table>
+                </div>
+            </div>
 
-                </tbody>
-            </table>
-        </div>
+
+
         <div class="row">
             <tr><strong>Comment</strong></tr>
         </div>
@@ -176,6 +201,7 @@
         <div class="row"></div>
             <button name="submit" id="btnSave" type="submit"  class="btn btn-primary btn-lg pull-right"><span class="glyphicon glyphicon-comment"> COMMENT </span></button>
         </form>
+
             <button hidden name="approve" id="btnApprove" type="submit"  onclick="document.location.href='cmr/approveCmr'" class="btn btn-info btn-lg pull-right"><span class="glyphicon glyphicon-thumbs-up"> APPROVE </span></button>
             <button name="back" type="submit"  onclick="document.location.href='cmr'" class="btn btn-info btn-lg pull-left"><span class="glyphicon glyphicon-menu-left"> BACK </span></button>
     </div>
