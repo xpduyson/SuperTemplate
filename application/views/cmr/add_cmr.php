@@ -5,8 +5,6 @@
     <script language="javascript" src="/assets/js/jquery-2.2.3.min.js"></script>
     <script>
         function showUser(couid) {
-
-
                 document.getElementById("info").style.visibility = 'visible';
                 $.ajax({
                     url: "<?php echo base_url(); ?>" + "cmr/getInfo",
@@ -28,9 +26,6 @@
                         $('#acaYear').val(result.courseYear);
                     }
                 });
-
-
-
 
         }
     </script>

@@ -87,7 +87,7 @@ class Panel extends Admin_Controller {
 		$groups = $this->ion_auth->groups()->result();
 		unset($groups[0]);	// disable creation of "webmaster" account
 		$this->mViewData['groups'] = $groups;
-		$this->mTitle.= 'Create Admin User';
+		$this->mTitle.= 'Create User';
 
 		$this->mViewData['form'] = $form;
 		$this->render('panel/admin_user_create');

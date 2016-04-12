@@ -90,9 +90,8 @@ $config['site'] = array(
             'url' => 'panel',
             'icon' => 'fa fa-cog',
             'children' => array(
-                'Admin Users' => 'panel/admin_user',
-                'Create Admin User' => 'panel/admin_user_create',
-                'Admin User Groups' => 'panel/admin_user_group',
+                'Users' => 'panel/admin_user',
+                'Create User' => 'panel/admin_user_create'
             )
         ),
         'logout' => array(
