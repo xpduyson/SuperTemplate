@@ -74,6 +74,10 @@ $config['site'] = array(
             'name' => 'Course',
             'url' => 'course',
             'icon' => 'glyphicon glyphicon-book',
+            'children' => array(
+                'View Course' => 'course',
+                'Add Course' => 'course/AddPage',
+            )
 
         ),
 

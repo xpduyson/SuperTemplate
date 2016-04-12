@@ -54,8 +54,20 @@ class Course extends Admin_Controller
     function edit($value)
     {
 
-        $this->mTitle.= 'Edit';
+        $this->mTitle.= 'Edit Course';
         $this->render('course/edit');
+    }
+    function AddPage()
+    {
+
+        $this->mTitle.= 'Add Course';
+        $this->render('course/new');
+    }
+    function Error()
+    {
+
+        $this->mTitle.= 'Error';
+        $this->render('course/Error');
     }
     function active($value)
     {   //get status from id
@@ -131,5 +143,55 @@ class Course extends Admin_Controller
         redirect('course');
     }
 
+    /**
+     *
+     */
+    function addCourse()
+    {
+        //get data from page edit
+        $id=$_POST['txtid'];
+        $fac=$_POST['fac'];
+        $title=$_POST['txtinputtitle'];
+        $time=$_POST['txttime'];
+        $level=$_POST['level'];
+        $credit=$_POST['txtcredit'];
+        $cl=$_POST['cl'];
+        $cm=$_POST['cm'];
+        $status=$_POST['rdactive'];
+        //set data update course
+        $countID=$this->db->where("couid",$id)->get('course')->num_rows();
+        if($countID==1){
+            $this->mTitle.= 'Error';
+            $this->render('course/Error');
+        }else{
+            $data = array(
+                'couid' => $id,
+                'faculty' => $fac,
+                'coutitle' => $title,
+                'coutime' => $time,
+                'coulevel' => $level,
+                'coucredit' => $credit,
+                'status' => $status
+            );
+
+            $this->db->insert('course', $data);
+            $datacl = array(
+                'users' => $cl,
+                'courses' => $id
+            );
+            $this->db->insert('coursestaff',$datacl);
+            $datacm = array(
+                'users' => $cm,
+                'courses' => $id
+            );
+            $this->db->insert('coursestaff',$datacm);
+            redirect('course');
+
+        }
+
+
+
+
+    }
 
 }

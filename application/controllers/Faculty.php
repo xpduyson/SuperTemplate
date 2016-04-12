@@ -24,12 +24,12 @@ class Faculty extends Admin_Controller
         $crud->set_rules('facdetails','Faculties-Details','required');
         $crud->set_rules('status','Status','required');
 
-
+        $crud->set_theme('datatables');
         $crud->display_as('facid','Faculty ID');
         $crud->display_as('facname','Faculty Name');
         $crud->display_as('facdetails','Faculty Details');
         $crud->display_as('status','Status');
-
+        $crud->unset_delete();
         $this->mTitle.= 'Faculties';
         $this->render_crud();
     }
