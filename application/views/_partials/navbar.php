@@ -16,7 +16,10 @@
                     <ul class="dropdown-menu">
                         <li class="user-header">
                             <p><?php echo $user->first_name; ?></p>
-                            nhập thêm thông tin vào đây
+                            <?php $this->load->model('Admin_user_model');
+                            $data = $this->Admin_user_model->getRole($user->id);
+                            echo $data->description
+                            ?>
                         </li>
                         <li class="user-footer">
                             <div class="pull-left">

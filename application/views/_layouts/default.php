@@ -1,6 +1,7 @@
 <div class="wrapper">
 
 	<?php $this->load->view('_partials/navbar'); ?>
+	
 
 	<?php // Left side column. contains the logo and sidebar ?>
 	<aside class="main-sidebar">
