@@ -48,6 +48,7 @@ class Course extends Admin_Controller
         //not set edit and delete
         $crud->unset_delete();
         $crud->unset_edit();
+        $crud->unset_add();
         $this->mTitle.= 'Course';
         $this->render_crud($crud);
     }

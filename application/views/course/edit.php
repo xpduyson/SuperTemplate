@@ -86,7 +86,7 @@
                                 }
                             }
 
-                            echo "<input required name=\"txttime\" type=\"number\" max='$max' class=\"form-control\" value=\"$cou->coutime\">( Max:$max)";
+                            echo "<input required name=\"txttime\" type=\"number\" min='0' max='$max' class=\"form-control\" value=\"$cou->coutime\">( Max:$max)";
 
                             ?>
                         </div>
