@@ -80,6 +80,7 @@ $config['site'] = array(
         'cmr' => array(
             'name' => 'CMR',
             'url' => 'CMR',
+            'icon' => 'glyphicon glyphicon-file',
             'children' => array(
                 'View CMR' => 'cmr',
                 'Add CMR' => 'cmr/Add',
