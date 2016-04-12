@@ -235,7 +235,6 @@ class Cmr extends Admin_Controller{
                     if($subID < 100 && $subID >= 9)
                         $resultID = '0'.($subID+1);
                     $resultID = 'cmr'.$resultID;
-                    $insertCM = $this->Cmr_model->getCMForInsert($couID);
 
                     $arr3 = array(
                         'cmrid' => $resultID,
@@ -243,8 +242,6 @@ class Cmr extends Admin_Controller{
                         'c_m_r_status' => $statusID,
                         'mark_planning' => $mark,
                         'academic_year' => $year,
-                        'user_cl' => $user_id,
-                        'user_cm' => $insertCM
                     );
 
                     $this->db->insert('cmr',$arr3);

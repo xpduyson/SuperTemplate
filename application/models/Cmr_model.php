@@ -126,8 +126,10 @@ class Cmr_model extends CI_Model
     {
         $this->db->select('courses,academic_year')
             ->from('cmr')
+            ->join('cmr_status','cmr_status.id = cmr.c_m_r_status')
             ->where('courses', $cou)
-            ->where('academic_year', $year);
+            ->where('academic_year', $year)
+            ->where('cmr_status.reject',0);
         $num = $this->db->get()->num_rows();
         if ($num > 0)
             return false;
@@ -227,22 +229,7 @@ class Cmr_model extends CI_Model
         else
             return $data->row()->first_name;
     }
-
-    public function getCMForInsert($key)
-    {
-        $this->db->select('users.id')
-            ->from('users')
-            ->join('coursestaff', 'users.id = coursestaff.users')
-            ->join('users_groups', 'users_groups.user_id = users.id')
-            ->join('course', 'course.couid = coursestaff.courses')
-            ->where('course.couid', $key)
-            ->where('users_groups.group_id', 5);
-        $data = $this->db->get();
-        if ($data->num_rows() > 0)
-            return $data->row();
-        else
-            return null;
-    }
+    
 
     public function getPVCList()
     {
