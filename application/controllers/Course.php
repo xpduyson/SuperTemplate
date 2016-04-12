@@ -43,8 +43,8 @@ class Course extends Admin_Controller
        $crud->callback_before_update(array($this,'beforeUpdate'));
        $crud->callback_before_insert(array($this,'beforeInsert'));
         //add setcourse and button active
-        $crud->add_action('SetCourse', '', 'course/edit','ui-icon-plus');
-        $crud->add_action('In/Active', '', 'course/active','ui-icon-plus');
+        $crud->add_action('Edit', '', 'course/edit','ui-icon-pencil');
+        $crud->add_action('In/Active', '', 'course/active','ui-icon-power');
         //not set edit and delete
         $crud->unset_delete();
         $crud->unset_edit();
