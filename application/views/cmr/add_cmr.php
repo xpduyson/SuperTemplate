@@ -72,7 +72,7 @@
                     </td>
                 </tr>
                 <tr >
-                    <td class="col-md-2"><strong>Mark Planning</strong></td>
+                    <td class="col-md-2"><strong>Mark Expected</strong></td>
                     <td class="col-md-10">
                        <input type="number" min="1" max="100" name="mark" id="mark">%
                     </td>

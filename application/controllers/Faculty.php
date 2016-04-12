@@ -31,6 +31,30 @@ class Faculty extends Admin_Controller
         $crud->display_as('status','Status');
         $crud->unset_delete();
         $this->mTitle.= 'Faculties';
+        if ($this->ion_auth->in_group(array('CM')))
+        {
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+        }
+        if ($this->ion_auth->in_group(array('CL')))
+        {
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+        }
+        if ($this->ion_auth->in_group(array('DLT')))
+        {
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+        }
+        if ($this->ion_auth->in_group(array('PVC')))
+        {
+            $crud->unset_delete();
+            $crud->unset_add();
+            $crud->unset_edit();
+        }
         $this->render_crud();
     }
 
