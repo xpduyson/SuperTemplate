@@ -76,7 +76,7 @@
                                 <label>Credit:</label>
                                 <?php
 
-                                echo "<input class=\"form-control\" step=\"5\" max=\"100\" min=\"0\" value='40' type=\"number\" name=\"txtcredit\">";
+                                echo "<input required class=\"form-control\" step=\"5\" max=\"100\" min=\"0\" value='40' type=\"number\" name=\"txtcredit\">";
                                 ?>
 
                             </div>

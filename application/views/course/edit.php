@@ -142,7 +142,7 @@
                             <?php
                             $id = $this->uri->segment(3);
                             $cou = $this->db->where("couid",$id)->get('course')->row()->coucredit;
-                            echo "<input class=\"form-control\" step=\"5\" max=\"100\" min=\"0\" value='$cou' type=\"number\" name=\"txtcredit\">";
+                            echo "<input required class=\"form-control\" step=\"5\" max=\"100\" min=\"0\" value='$cou' type=\"number\" name=\"txtcredit\">";
                             ?>
 
                         </div>
