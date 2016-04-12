@@ -44,6 +44,7 @@ class Panel extends Admin_Controller {
         
         //FACULTY
         $crud->set_relation('faculty','faculties','facdetails');
+		$crud->set_theme('datatables');
 
 		$this->mTitle.= 'Admin Users';
 		$this->render_crud();
