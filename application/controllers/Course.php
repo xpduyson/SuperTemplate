@@ -28,6 +28,10 @@ class Course extends Admin_Controller
             $facudetail=$this->db->where('facid',$fac)->get('faculties')->row()->facdetails;
             $this->mTitle.= $facuname.'|'.$facudetail;
 
+            if($userRoll==2){
+                $crud->add_action('Edit', '', 'course/edit','ui-icon-pencil');
+                $crud->add_action('In/Active', '', 'course/active','ui-icon-power');
+            }
         }
 
 
@@ -60,10 +64,7 @@ class Course extends Admin_Controller
        $crud->callback_before_update(array($this,'beforeUpdate'));
        $crud->callback_before_insert(array($this,'beforeInsert'));
         //add setcourse and button active
-        if($userRoll==2){
-            $crud->add_action('Edit', '', 'course/edit','ui-icon-pencil');
-            $crud->add_action('In/Active', '', 'course/active','ui-icon-power');
-        }
+
 
         //not set edit and delete
         $crud->unset_delete();
