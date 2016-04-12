@@ -33,7 +33,7 @@ class Cmr extends Admin_Controller{
         $crud->set_relation('c_m_r_status','cmr_status','id');
 
         $crud->callback_column($this->unique_field_name('c_m_r_status'),function($value, $row) {
-            $this->db->select('dlt_comment,cm_checked')
+            $this->db->select('dlt_comment,cm_checked,reject')
                 ->from('cmr_status')
                 ->where('id',$value);
             $stat = $this->db->get()->row();
@@ -42,10 +42,16 @@ class Cmr extends Admin_Controller{
                 $result.= 'Commented - ';
             else
                 $result .= 'No comment - ';
-            if($stat->cm_checked == 0)
-                $result .= 'Not Approved';
-            if($stat->cm_checked == 1)
-                $result .= 'Approved';
+            if($stat->reject == 1)
+                $result .= 'Rejected';
+            else{
+                if($stat->cm_checked == 0)
+                    $result .= 'Not Approved';
+                if($stat->cm_checked == 1)
+                    $result .= 'Approved';
+            }
+
+
 
             return $result;
         });
@@ -272,7 +278,8 @@ class Cmr extends Admin_Controller{
         );
         $this->db->where('id', $this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
-        redirect('cmr/detailsCMR/'.$this->session->userdata("cmrStatus3"));
+        $this->session->set_flashdata('message', 'Comment CMR Successful!!!');
+        redirect('cmr');
 
     }
 
@@ -283,7 +290,20 @@ class Cmr extends Admin_Controller{
         );
         $this->db->where('id',$this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
-        redirect('cmr/detailsCmr/'.$this->session->userdata("cmrStatus3"));
+        $this->session->set_flashdata('message', 'Approved CMR Successful!!!');
+        redirect('cmr');
+    }
+
+    public function rejectCMR(){
+
+        $value = array(
+            'cm_checked' => 0,
+            'reject' => 1
+        );
+        $this->db->where('id',$this->session->userdata("cmrStatus2"));
+        $this->db->update('cmr_status',$value);
+        $this->session->set_flashdata('message', 'Reject CMR Successful!!!');
+        redirect('cmr');
     }
     
     public function getInfo(){
