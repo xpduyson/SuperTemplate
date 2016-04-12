@@ -26,20 +26,7 @@
                                 <input required class="form-control" id="txtid" name="txtid" placeholder="ID Course">
 
                             </div>
-                            <div class="form-group">
-                                <label>Faculty:</label>
-                                <select name="fac" id="fac" class="form-control">
-                                    <?php
 
-
-                                    $faculties = $this->db->get('faculties');
-                                    foreach ($faculties->result() as $row) {
-
-                                        echo "<option  value='$row->facid'>$row->facname|$row->facdetails</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
                             <div class="form-group">
                                 <label>Course Title:</label>
 

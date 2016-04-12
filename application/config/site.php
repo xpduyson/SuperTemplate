@@ -116,7 +116,8 @@ $config['site'] = array(
         'panel/admin_user' => array('webmaster'),
         'panel/admin_user_create' => array('webmaster'),
         'panel/admin_user_group' => array('webmaster'),
-        'course' => array('PVC'),
+        'course/AddPage' => array('PVC'),
+
         'cmr/Add' => array('CL'),
         'CMR' => array('PVC', 'DLT', 'CM', 'guest', 'CL'),
         'cmr' => array('PVC', 'DLT', 'CM', 'guest', 'CL')
