@@ -7,13 +7,29 @@ class Course extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library("session");
         $this->mTitle = 'Course - ';
         $this->push_breadcrumb('Course');
     }
 
     public function index()
     {
-        $crud = $this->generate_crud('course');
+        $iduser=$this->db->where('username',$this->session->userdata("namelog2"))->get('users')->row()->id;
+        $userRoll=$this->db->where('user_id',$iduser)->get('users_groups')->row()->group_id;
+
+        $fac=$this->db->where('username',$this->session->userdata("namelog2"))->get('users')->row()->faculty;
+
+        if($fac==''){
+            $crud = $this->generate_crud('course');
+            $this->mTitle.= 'All Course';
+        }else{
+            $crud = $this->generate_crud('course')->where('faculty',$fac);
+            $facuname=$this->db->where('facid',$fac)->get('faculties')->row()->facname;
+            $facudetail=$this->db->where('facid',$fac)->get('faculties')->row()->facdetails;
+            $this->mTitle.= $facuname.'|'.$facudetail;
+
+        }
+
 
         $crud->set_rules('couid','Course-ID','required');
         $crud->set_rules('faculty','Faculties-Name','required');
@@ -24,11 +40,12 @@ class Course extends Admin_Controller
         $crud->callback_add_field('status',array($this,'edit_field_callback_status'));
         $crud->callback_column('coutime',array($this,'valueMonth'));
         $crud->callback_column('users',array($this,'valueUser'));
-        $crud->columns('couid','faculty','coutitle','coutime','coulevel','coucredit','CourseStaff','status');
+        $crud->callback_column('CourseStaff',array($this,'valuestaff'));
+        $crud->columns('couid','coutitle','coutime','coulevel','coucredit','CourseStaff','status');
         $crud->fields('couid','faculty','coutitle','status');
         $crud->edit_fields('couid','faculty','coutitle','coutime','coulevel','coucredit','CourseStaff','status');
         //set ralation faculty
-        $crud->set_relation('faculty','faculties','facdetails','status=1');
+       // $crud->set_relation('faculty','faculties','facdetails','status=1');
         //check and get staff
         $users_groups = $this->db->where("group_id",4)->get('users_groups')->row()->user_id;
         $crud->set_relation_n_n('CourseStaff','coursestaff','users','courses','users','username',null,'id='.$users_groups);
@@ -43,13 +60,16 @@ class Course extends Admin_Controller
        $crud->callback_before_update(array($this,'beforeUpdate'));
        $crud->callback_before_insert(array($this,'beforeInsert'));
         //add setcourse and button active
-        $crud->add_action('Edit', '', 'course/edit','ui-icon-pencil');
-        $crud->add_action('In/Active', '', 'course/active','ui-icon-power');
+        if($userRoll==2){
+            $crud->add_action('Edit', '', 'course/edit','ui-icon-pencil');
+            $crud->add_action('In/Active', '', 'course/active','ui-icon-power');
+        }
+
         //not set edit and delete
         $crud->unset_delete();
         $crud->unset_edit();
         $crud->unset_add();
-        $this->mTitle.= 'Course';
+
         $this->render_crud($crud);
     }
     function edit($value)
@@ -91,16 +111,10 @@ class Course extends Admin_Controller
     {
         return $value.' Month';
     }
-
-    function beforeInsert($post_array)
+    function valuestaff($value, $row)
     {
-        echo 'before update';
-        $post_array['status'] = '0';
-
-        return $post_array;
+        return $value;
     }
-
-
 
     function edit_field_callback_status($value)
 {
@@ -149,47 +163,54 @@ class Course extends Admin_Controller
      */
     function addCourse()
     {
-        //get data from page edit
-        $id=$_POST['txtid'];
-        $fac=$_POST['fac'];
-        $title=$_POST['txtinputtitle'];
-        $time=$_POST['txttime'];
-        $level=$_POST['level'];
-        $credit=$_POST['txtcredit'];
-        $cl=$_POST['cl'];
-        $cm=$_POST['cm'];
-        $status=$_POST['rdactive'];
-        //set data update course
-        $countID=$this->db->where("couid",$id)->get('course')->num_rows();
-        if($countID==1){
+        $fac=$this->db->where('username',$this->session->userdata("namelog2"))->get('users')->row()->faculty;
+        if($fac==''){
             $this->mTitle.= 'Error';
             $this->render('course/Error');
-        }else{
-            $data = array(
-                'couid' => $id,
-                'faculty' => $fac,
-                'coutitle' => $title,
-                'coutime' => $time,
-                'coulevel' => $level,
-                'coucredit' => $credit,
-                'status' => $status
-            );
-
-            $this->db->insert('course', $data);
-            $datacl = array(
-                'users' => $cl,
-                'courses' => $id
-            );
-            $this->db->insert('coursestaff',$datacl);
-            $datacm = array(
-                'users' => $cm,
-                'courses' => $id
-            );
-            $this->db->insert('coursestaff',$datacm);
-            redirect('course');
-
         }
+       else{
+           //get data from page edit
+           $id=$_POST['txtid'];
+           $fac=$fac;
+           $title=$_POST['txtinputtitle'];
+           $time=$_POST['txttime'];
+           $level=$_POST['level'];
+           $credit=$_POST['txtcredit'];
+           $cl=$_POST['cl'];
+           $cm=$_POST['cm'];
+           $status=$_POST['rdactive'];
+           //set data update course
+           $countID=$this->db->where("couid",$id)->get('course')->num_rows();
+           if($countID==1){
+               $this->mTitle.= 'Error';
+               $this->render('course/Error');
+           }else{
+               $data = array(
+                   'couid' => $id,
+                   'faculty' => $fac,
+                   'coutitle' => $title,
+                   'coutime' => $time,
+                   'coulevel' => $level,
+                   'coucredit' => $credit,
+                   'status' => $status
+               );
 
+               $this->db->insert('course', $data);
+               $datacl = array(
+                   'users' => $cl,
+                   'courses' => $id
+               );
+               $this->db->insert('coursestaff',$datacl);
+               $datacm = array(
+                   'users' => $cm,
+                   'courses' => $id
+               );
+               $this->db->insert('coursestaff',$datacm);
+               redirect('course');
+
+           }
+
+       }
 
 
 

@@ -19,7 +19,7 @@
             <div class="panel-body">
                 <form method="post" action="<?php echo site_url('course/AddPage'); ?>">
 
-                       <p>Error! This Course is have already exist ID</p>
+                       <p>Error! This Course is have already exist ID Or You Haven't in course</p>
                 <div class="panel-footer">
                 <button type="submit" class="btn btn-success">Back</button>
 

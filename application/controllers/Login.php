@@ -11,6 +11,7 @@ class Login extends MY_Controller {
 	public function index()
 	{
 		$this->load->library('form_builder');
+		$this->load->library("session");
 		$form = $this->form_builder->create_form();
 		$this->load->model('Cmr_model');
 
@@ -27,7 +28,9 @@ class Login extends MY_Controller {
 				// login succeed
 				$messages = $this->ion_auth->messages();
 				$data = $this->Cmr_model->getNeededCommentCMR($this->ion_auth->user()->row()->faculty);
-				
+
+
+				$this->session->set_userdata("namelog2", $identity);
 				$this->session->set_flashdata('cmrNotComment',$data);
 				$this->system_message->set_success($messages);
 				redirect('home');
