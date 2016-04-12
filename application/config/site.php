@@ -74,10 +74,7 @@ $config['site'] = array(
             'name' => 'Course',
             'url' => 'course',
             'icon' => 'glyphicon glyphicon-book',
-            'children' => array(
-                'View Course' => 'course',
-                'Result' => 'course/resultc',
-            )
+
         ),
 
         'cmr' => array(
