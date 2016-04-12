@@ -15,6 +15,7 @@ class Panel extends Admin_Controller {
 		parent::__construct();
 		$this->load->library('form_builder');
 		$this->mTitle = 'Admin Panel - ';
+		$this->load->model('Admin_user_model');
 	}
 
 	// Admin Users CRUD
@@ -22,6 +23,7 @@ class Panel extends Admin_Controller {
 	{
 		$crud = $this->generate_crud('users');
 		$crud->columns('groups', 'username', 'first_name', 'last_name', 'active');
+		$crud->required_fields('groups', 'username', 'first_name', 'last_name', 'active');
 		//$this->unset_crud_fields('ip_address', 'last_login');
 
 		// cannot change Admin User groups once created
@@ -86,6 +88,7 @@ class Panel extends Admin_Controller {
 
 		$groups = $this->ion_auth->groups()->result();
 		unset($groups[0]);	// disable creation of "webmaster" account
+		$this->mViewData['faculties'] = $this->Admin_user_model->getFacId();
 		$this->mViewData['groups'] = $groups;
 		$this->mTitle.= 'Create User';
 
