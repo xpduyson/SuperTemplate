@@ -135,7 +135,7 @@
 
                 </tr>
                 <tr id="approveDate">
-                    <td class="col-md-2""><strong>Mark Planning</strong></td>
+                    <td class="col-md-2""><strong>Mark Expected</strong></td>
                     <td class="col-md-2" id="approveCM">
                         <?php echo $courseMark; ?> %
                     </td>
