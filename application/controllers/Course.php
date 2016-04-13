@@ -55,10 +55,10 @@ class Course extends Admin_Controller
         $crud->set_relation_n_n('CourseStaff','coursestaff','users','courses','users','username',null,'id='.$users_groups);
 
         //set table and display
-        $crud->display_as('couid','Course ID');
+        $crud->display_as('couid',' ID');
         $crud->display_as('faculty','Faculty');
-        $crud->display_as('coutitle','Course Title');
-        $crud->display_as('coutime','Course Time(Month)');
+        $crud->display_as('coutitle',' Title');
+        $crud->display_as('coutime',' Time(Month)');
         $crud->set_theme('datatables');
         //check before update
        $crud->callback_before_update(array($this,'beforeUpdate'));
