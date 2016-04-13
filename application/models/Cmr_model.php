@@ -56,7 +56,7 @@ class Cmr_model extends CI_Model
 
     public function getCmrInfo($key)
     {
-        $this->db->select('cmrid,courses,course.coutitle,academic_year,c_m_r_status,mark_planning')
+        $this->db->select('*')
             ->from('cmr')
             ->join('cmr_status', 'cmr.c_m_r_status = cmr_status.id', 'left')
             ->join('course', 'cmr.courses = course.couid', 'left')

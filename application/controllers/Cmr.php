@@ -178,6 +178,7 @@ class Cmr extends Admin_Controller{
         $status = $this->Cmr_model->getCmrStatus($info->c_m_r_status);
         $name = $this->Cmr_model->getName($info->courses);
         $courseDetails = $this->Cmr_model->getCourseInfo($info->courses);
+        
         $this->mTitle = 'CMR Details';
         $this->mViewData['cmrInfo'] = $info;
         $this->mViewData['cmrUser'] = $name;
@@ -191,6 +192,13 @@ class Cmr extends Admin_Controller{
         $this->mViewData['coursePVC'] = $courseDetails['PVC'];
         $this->mViewData['courseDLT'] = $courseDetails['DLT'];
         $this->mViewData['courseCM'] = $courseDetails['CM'];
+        $date = time();
+        $cmrtime = strtotime($info->date_approved);
+        $diff = $cmrtime + 1209600;
+        $goal = $diff - $date;
+        
+        $this->mViewData['timeLeft'] = $goal;
+            
         $this->session->set_userdata('cmrStatus2',$status->id);
         $this->session->set_userdata('cmrStatus3',$info->cmrid);
         $this->render('cmr/view_cmr');

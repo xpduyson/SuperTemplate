@@ -9,8 +9,16 @@
             <?php
                 if($this->ion_auth->in_group(array('DLT')))
                 {
-                ?>if (document.getElementById('txtComment').value == '')
-                document.getElementById('txtComment').disabled = false;
+            ?>
+            var left = <?php echo $timeLeft ?>;
+            if(left > 0){
+                if ($("#txtComment").val(""))
+                    document.getElementById('txtComment').disabled = false;
+            }else{
+                document.getElementById('txtComment').disabled = true;
+                document.getElementById('btnSave').disabled = true;
+            }
+
             document.getElementById('btnApprove').style.visibility = 'hidden';
             document.getElementById('btnReject').style.visibility = 'hidden';
             <?php
