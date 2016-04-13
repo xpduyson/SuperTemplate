@@ -10,7 +10,7 @@
 			<?php echo $form->bs3_password('Password', 'password', ''); ?>
 			<div class="row">
 				<div class="col-xs-4">
-					<?php echo $form->bs3_submit('Sign In', 'btn btn-primary btn-block btn-flat'); ?>
+					<?php echo $form->bs3_submit('Log In', 'btn btn-primary btn-block btn-flat'); ?>
 				</div>
 			</div>
 		<?php echo $form->close(); ?>
