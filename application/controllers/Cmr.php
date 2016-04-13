@@ -72,7 +72,7 @@ class Cmr extends Admin_Controller{
             $crud->where('cm_checked',1);
             $crud->unset_edit();
             $crud->unset_add();
-
+            $crud->unset_delete();
 
         }
 
@@ -89,6 +89,7 @@ class Cmr extends Admin_Controller{
             $crud->where('faculty',$user->faculty);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
         if ($this->ion_auth->in_group(array('CL')))
@@ -105,7 +106,8 @@ class Cmr extends Admin_Controller{
             $crud->where('users',$user_id);
             $crud->unset_add();
             $crud->unset_edit();
-            $crud->add_action('Delete', '', 'cmr/deleteCMR','ui-icon-plus');
+            $crud->callback_before_delete(array($this,'before_delete_cmr'));
+            $crud->callback_after_delete(array($this,'after_delete_cmr'));
 
         }
 
@@ -123,6 +125,7 @@ class Cmr extends Admin_Controller{
             $crud->where('users',$user_id);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
 
         }
 
@@ -139,6 +142,7 @@ class Cmr extends Admin_Controller{
             $crud->where('faculty',$user->faculty);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
         if ($this->ion_auth->in_group(array('webmaster')))
@@ -153,16 +157,28 @@ class Cmr extends Admin_Controller{
             $crud->set_relation('courses','course','couid');
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
-        $crud->unset_delete();
+
         $crud->unset_read();
-        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-plus');
+        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-zoomin');
         $this->mTitle = 'Course Monitoring Report';
         $this->render_crud();
         
     }
-    
+
+    public function before_delete_cmr($key)
+    {
+        $cmr = $this->db->where('cmrid',$key)->get('cmr')->row();
+        $this->session->set_flashdata('statKey', $cmr->c_m_r_status);
+    }
+
+    public function after_delete_cmr()
+    {
+        return $this->db->delete('cmr_status',array('id' => $this->session->flashdata('statKey')));
+    }
+
     public function Add(){
         $this->mTitle = 'ADD CMR';
         $this->mViewData['cmrDrop'] = $this->Cmr_model->getCMR();
@@ -250,6 +266,7 @@ class Cmr extends Admin_Controller{
                         'c_m_r_status' => $statusID,
                         'mark_planning' => $mark,
                         'academic_year' => $year,
+
                     );
 
                     $this->db->insert('cmr',$arr3);
