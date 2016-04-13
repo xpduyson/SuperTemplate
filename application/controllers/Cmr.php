@@ -33,7 +33,7 @@ class Cmr extends Admin_Controller{
         $crud->set_relation('c_m_r_status','cmr_status','id');
 
         $crud->callback_column($this->unique_field_name('c_m_r_status'),function($value, $row) {
-            $this->db->select('dlt_comment,cm_checked')
+            $this->db->select('dlt_comment,cm_checked,reject')
                 ->from('cmr_status')
                 ->where('id',$value);
             $stat = $this->db->get()->row();
@@ -42,10 +42,16 @@ class Cmr extends Admin_Controller{
                 $result.= 'Commented - ';
             else
                 $result .= 'No comment - ';
-            if($stat->cm_checked == 0)
-                $result .= 'Not Approved';
-            if($stat->cm_checked == 1)
-                $result .= 'Approved';
+            if($stat->reject == 1)
+                $result .= 'Rejected';
+            else{
+                if($stat->cm_checked == 0)
+                    $result .= 'Not Approved';
+                if($stat->cm_checked == 1)
+                    $result .= 'Approved';
+            }
+
+
 
             return $result;
         });
@@ -66,7 +72,7 @@ class Cmr extends Admin_Controller{
             $crud->where('cm_checked',1);
             $crud->unset_edit();
             $crud->unset_add();
-
+            $crud->unset_delete();
 
         }
 
@@ -83,6 +89,7 @@ class Cmr extends Admin_Controller{
             $crud->where('faculty',$user->faculty);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
         if ($this->ion_auth->in_group(array('CL')))
@@ -99,7 +106,8 @@ class Cmr extends Admin_Controller{
             $crud->where('users',$user_id);
             $crud->unset_add();
             $crud->unset_edit();
-            $crud->add_action('Delete', '', 'cmr/deleteCMR','ui-icon-plus');
+            $crud->callback_before_delete(array($this,'before_delete_cmr'));
+            $crud->callback_after_delete(array($this,'after_delete_cmr'));
 
         }
 
@@ -117,6 +125,7 @@ class Cmr extends Admin_Controller{
             $crud->where('users',$user_id);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
 
         }
 
@@ -133,6 +142,7 @@ class Cmr extends Admin_Controller{
             $crud->where('faculty',$user->faculty);
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
         if ($this->ion_auth->in_group(array('webmaster')))
@@ -147,16 +157,28 @@ class Cmr extends Admin_Controller{
             $crud->set_relation('courses','course','couid');
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->unset_delete();
         }
 
-        $crud->unset_delete();
+
         $crud->unset_read();
-        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-plus');
+        $crud->add_action('Details', '', 'cmr/detailsCMR','ui-icon-zoomin');
         $this->mTitle = 'Course Monitoring Report';
         $this->render_crud();
         
     }
-    
+
+    public function before_delete_cmr($key)
+    {
+        $cmr = $this->db->where('cmrid',$key)->get('cmr')->row();
+        $this->session->set_flashdata('statKey', $cmr->c_m_r_status);
+    }
+
+    public function after_delete_cmr()
+    {
+        return $this->db->delete('cmr_status',array('id' => $this->session->flashdata('statKey')));
+    }
+
     public function Add(){
         $this->mTitle = 'ADD CMR';
         $this->mViewData['cmrDrop'] = $this->Cmr_model->getCMR();
@@ -172,6 +194,7 @@ class Cmr extends Admin_Controller{
         $status = $this->Cmr_model->getCmrStatus($info->c_m_r_status);
         $name = $this->Cmr_model->getName($info->courses);
         $courseDetails = $this->Cmr_model->getCourseInfo($info->courses);
+        
         $this->mTitle = 'CMR Details';
         $this->mViewData['cmrInfo'] = $info;
         $this->mViewData['cmrUser'] = $name;
@@ -185,6 +208,13 @@ class Cmr extends Admin_Controller{
         $this->mViewData['coursePVC'] = $courseDetails['PVC'];
         $this->mViewData['courseDLT'] = $courseDetails['DLT'];
         $this->mViewData['courseCM'] = $courseDetails['CM'];
+        $date = time();
+        $cmrtime = strtotime($info->date_approved);
+        $diff = $cmrtime + 1209600;
+        $goal = $diff - $date;
+        
+        $this->mViewData['timeLeft'] = $goal;
+            
         $this->session->set_userdata('cmrStatus2',$status->id);
         $this->session->set_userdata('cmrStatus3',$info->cmrid);
         $this->render('cmr/view_cmr');
@@ -229,7 +259,6 @@ class Cmr extends Admin_Controller{
                     if($subID < 100 && $subID >= 9)
                         $resultID = '0'.($subID+1);
                     $resultID = 'cmr'.$resultID;
-                    $insertCM = $this->Cmr_model->getCMForInsert($couID);
 
                     $arr3 = array(
                         'cmrid' => $resultID,
@@ -237,8 +266,7 @@ class Cmr extends Admin_Controller{
                         'c_m_r_status' => $statusID,
                         'mark_planning' => $mark,
                         'academic_year' => $year,
-                        'user_cl' => $user_id,
-                        'user_cm' => $insertCM
+
                     );
 
                     $this->db->insert('cmr',$arr3);
@@ -272,7 +300,8 @@ class Cmr extends Admin_Controller{
         );
         $this->db->where('id', $this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
-        redirect('cmr/detailsCMR/'.$this->session->userdata("cmrStatus3"));
+        $this->session->set_flashdata('message', 'Comment CMR Successful!!!');
+        redirect('cmr');
 
     }
 
@@ -283,7 +312,20 @@ class Cmr extends Admin_Controller{
         );
         $this->db->where('id',$this->session->userdata("cmrStatus2"));
         $this->db->update('cmr_status',$value);
-        redirect('cmr/detailsCmr/'.$this->session->userdata("cmrStatus3"));
+        $this->session->set_flashdata('message', 'Approved CMR Successful!!!');
+        redirect('cmr');
+    }
+
+    public function rejectCMR(){
+
+        $value = array(
+            'cm_checked' => 0,
+            'reject' => 1
+        );
+        $this->db->where('id',$this->session->userdata("cmrStatus2"));
+        $this->db->update('cmr_status',$value);
+        $this->session->set_flashdata('message', 'Reject CMR Successful!!!');
+        redirect('cmr');
     }
     
     public function getInfo(){

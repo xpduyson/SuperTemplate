@@ -13,6 +13,7 @@ class Faculty extends Admin_Controller
 
     public function index()
     {
+        $user = $this->ion_auth->user()->row();
         $crud = $this->generate_crud('faculties');
        // $crud->columns('author_id', 'category_id', 'title', 'image_url', 'tags', 'publish_time', 'status');
        // $crud->set_field_upload('image_url', UPLOAD_DEMO_BLOG_POST);
@@ -36,24 +37,28 @@ class Faculty extends Admin_Controller
             $crud->unset_delete();
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->where('facid',$user->faculty);
         }
         if ($this->ion_auth->in_group(array('CL')))
         {
             $crud->unset_delete();
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->where('facid',$user->faculty);
         }
         if ($this->ion_auth->in_group(array('DLT')))
         {
             $crud->unset_delete();
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->where('facid',$user->faculty);
         }
         if ($this->ion_auth->in_group(array('PVC')))
         {
             $crud->unset_delete();
             $crud->unset_add();
             $crud->unset_edit();
+            $crud->where('facid',$user->faculty);
         }
         $this->render_crud();
     }
