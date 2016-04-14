@@ -23,7 +23,7 @@
                             <?php
                         foreach ($faculties as $value) {
                             ?>
-                            <option name="faculty" value="<?php echo $value['facid']; ?>">
+                            <option value="<?php echo $value['facid']; ?>">
                                 <?php echo $value['facname']; ?></option>
                             <?php
                         }

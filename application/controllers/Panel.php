@@ -58,8 +58,8 @@ class Panel extends Admin_Controller {
 		{
 			// passed validation
 			$username = $this->input->post('username');
-			$email = $this->input->post('email');
 			$password = $this->input->post('password');
+			$fal = $this->input->post('faculty');
 			$additional_data = array(
 				'first_name'	=> $this->input->post('first_name'),
 				'last_name'		=> $this->input->post('last_name'),
@@ -71,6 +71,9 @@ class Panel extends Admin_Controller {
 			if ($user)
 			{
 				// success
+
+				$userid = $this->Admin_user_model->getLastUser();
+				$this->Admin_user_model->insertFaculty($userid,$fal);
 				$messages = $this->ion_auth->messages();
 				$this->system_message->set_success($messages);
 			}
@@ -82,6 +85,7 @@ class Panel extends Admin_Controller {
 			}
 			refresh();
 		}
+
 
 		$groups = $this->ion_auth->groups()->result();
 		unset($groups[0]);	// disable creation of "webmaster" account

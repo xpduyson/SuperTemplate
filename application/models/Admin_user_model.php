@@ -26,5 +26,19 @@ class Admin_user_model extends MY_Model
         $data = $this->db->get()->row();
         return $data;
     }
+
+    public function getLastUser(){
+        $data = $this->db->query('select * from users order by id desc limit 1')->row();
+        return $data->id;
+    }
+    
+    public function insertFaculty($user,$faculty){
+        $data = array(
+            'faculty' => $faculty
+        );
+
+        $this->db->where('id', $user);
+        $this->db->update('users', $data);
+    }
 }
 //TODO - Thong tin ve CL( soan bao nhieu, bao nhieu da submit, ....)
