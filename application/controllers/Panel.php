@@ -32,11 +32,7 @@ class Panel extends Admin_Controller {
 			$crud->set_relation_n_n('groups', 'users_groups', 'groups', 'user_id', 'group_id', 'name');
 		}
 
-		// only webmaster can reset Admin User password
-		if ( $this->ion_auth->in_group(array('webmaster', 'admin')) )
-		{
-			$crud->add_action('Reset Password', '', 'panel/admin_user_reset_password', 'fa fa-repeat');
-		}
+
 		
 		// disable direct create / delete Admin User
 		$crud->unset_add();
