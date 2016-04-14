@@ -82,6 +82,8 @@ class Course extends Admin_Controller
     function AddPage()
     {
 
+        $this->mViewData['namelog'] = $this->session->userdata('namelog2');
+
         $this->mTitle.= 'Add Course';
         $this->render('course/new');
     }

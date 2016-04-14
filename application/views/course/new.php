@@ -36,9 +36,34 @@
                             <div class="form-group">
                                 <label>Time:</label>
                                 <?php
+                                $time=0;
+                                $fac=$this->db->where('username',$namelog)->get('users')->row()->faculty;
 
 
-                                echo "<input readonly name=\"txttime\" type=\"number\"  class=\"form-control\" value=\"0\">";
+                                //$faculty = $this->db->where("couid",$id)->get('course')->row()->faculty;
+                                $status = 0;
+                                $result = $this->db->where("faculty",$fac)->get('course');
+
+                               // $cou = $this->db->where("couid",$id)->get('course')->row();
+                                if($result->num_rows() > 0)
+                                {
+                                    foreach($result->result() as $row)
+                                    {
+                                        if($row->status==1){
+                                            $time += $row->coutime;
+                                        }
+                                    }
+
+                                    if($status==1){
+                                        $a=$time-$cou->coutime;
+                                        $max=12-$a;
+                                    }else{
+                                        $a=$time;
+                                        $max=12-$a;
+                                    }
+                                }
+
+                                echo "<input required name=\"txttime\" type=\"number\" min='0' max='$max' class=\"form-control\" value=\"0\">( Max:$max)";
 
                                 ?>
                             </div>
