@@ -119,8 +119,8 @@ $config['site'] = array(
         'course/AddPage' => array('PVC'),
 
         'cmr/Add' => array('CL'),
-        'CMR' => array('PVC', 'DLT', 'CM', 'guest', 'CL'),
-        'cmr' => array('PVC', 'DLT', 'CM', 'guest', 'CL')
+        'CMR' => array('PVC', 'DLT', 'CM', 'guest', 'CL','webmaster'),
+        'cmr' => array('PVC', 'DLT', 'CM', 'guest', 'CL','webmaster')
 
 
     ),

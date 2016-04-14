@@ -63,7 +63,8 @@
             {
             ?> document.getElementById('btnSave').style.visibility = 'hidden'
             document.getElementById('btnApprove').style.visibility = 'hidden';
-            ;<?php
+            document.getElementById('btnReject').style.visibility = 'hidden';
+            <?php
             }
 
             ?>
@@ -72,7 +73,8 @@
             {
             ?> document.getElementById('btnSave').style.visibility = 'hidden'
             document.getElementById('btnApprove').style.visibility = 'hidden';
-            ;<?php
+            document.getElementById('btnReject').style.visibility = 'hidden';
+            <?php
             }
             ?>
             <?php
@@ -80,7 +82,7 @@
             {
             ?> document.getElementById('btnSave').style.visibility = 'hidden'
             document.getElementById('btnApprove').style.visibility = 'hidden';
-            ;<?php
+            document.getElementById('btnReject').style.visibility = 'hidden';<?php
             }
             ?>
 
