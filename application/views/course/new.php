@@ -149,7 +149,7 @@
                     </div>
             </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-success">Submit Add</button>
+                <button type="submit" class="btn btn-success">Add new Course</button>
 
             </div>
             </form>

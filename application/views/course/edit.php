@@ -259,7 +259,7 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-success">Submit Edit</button>
+                <button type="submit" class="btn btn-success">Save</button>
                 <button  class="btn btn-info">Back</button>
             </div>
             </form>
